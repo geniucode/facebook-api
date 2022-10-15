@@ -1,19 +1,18 @@
 {
-  "name": "facebook-api",
+  "name": "facebook APP",
   "version": "1.0.0",
-  "description": "Facebook api",
+  "description": "facebook server",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/geniucode/facebook-api.git"
+    "start": "nodemon ./index.js"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/geniucode/facebook-api/issues"
+  "dependencies": {
+    "express": "^4.18.1"
   },
-  "homepage": "https://github.com/geniucode/facebook-api#readme"
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
 }
