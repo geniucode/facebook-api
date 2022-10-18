@@ -1,9 +1,10 @@
 import express from "express";
-import { query, body, validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import emailValidator from "email-validator";
 import { User } from "../../../model/user/index.js";
 import bcrypt from "bcrypt";
-import statusCodes from "../../../code-status.js";
+import { validate } from "../../utils/validator.js";
+import { STATUS_CODE } from "../../../code-status.js";
 
 const saltRounds = 10;
 const userSignupRouter = express.Router();
@@ -21,42 +22,31 @@ userSignupRouter.post(
     .isNumeric("age" < 16)
     .withMessage("from 16 years old "),
   body("country").isString().withMessage("please enter a valid country name "),
-
+  validate,
   async (req, res) => {
     try {
       const { email, gender, password, age, country } = req.body;
+      if (emailValidator.validate(email)) {
+        const salt = await bcrypt.genSaltSync(saltRounds);
+        const hash = await bcrypt.hashSync(password, salt);
+        const newUser = new User({
+          email,
+          gender,
+          password: hash,
+          age,
+          country,
+        });
 
-      if (email.length && gender.length && password.length && country.length && country.length) {
-        if (emailValidator.validate(email)) {
-          const salt = await bcrypt.genSaltSync(saltRounds);
-          const hash = await bcrypt.hashSync(password, salt);
-          const newUser = new User({
-            email,
-            gender,
-            password: hash,
-            age,
-            country,
-          });
-
-          await newUser.save();
-          res.send({
-            message: "email is Valid and all data are successfully",
-          });
-        } else {
-          res.status(statusCodes.NotFound).send({
-            message: "Please enter a Valid email address ",
-          });
-        }
+        await newUser.save();
+        res.send({
+          message: "email is Valid and all data are successfully",
+        });
       } else {
-        return res.status(statusCodes.NotFound).send({
-          message: "Missing Required Field ",
+        res.status(STATUS_CODE.NotFound).send({
+          message: "Please enter a Valid email address ",
         });
       }
     } catch (error) {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       res.send("already added ");
     }
   }
