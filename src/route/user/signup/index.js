@@ -1,16 +1,14 @@
 import express from "express";
-import { body, validationResult } from "express-validator";
-import emailValidator from "email-validator";
-import { User } from "../../../model/user/index.js";
+import { body } from "express-validator";
 import bcrypt from "bcrypt";
-import { validate } from "../../utils/validator.js";
-import { STATUS_CODE } from "../../../code-status.js";
+import { validate } from "../../../utils/validator.js";
+import { User } from "../../../model/user/index.js";
 
 const saltRounds = 10;
 const userSignupRouter = express.Router();
 
 userSignupRouter.post(
-  "/signup",
+  "/user/signup",
   body("email").isEmail().withMessage("Please enter a valid email"),
   body("gender").isString().withMessage("male or female"),
   body("password")

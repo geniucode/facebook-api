@@ -6,7 +6,6 @@ const usersSchema = new Schema({
   password: String,
   age: Number,
   country: String,
-
 });
 usersSchema.index({ email: 1 });
 export const User = mongoose.model("User", usersSchema);
