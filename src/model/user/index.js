@@ -4,7 +4,7 @@ const usersSchema = new Schema({
   email: { type: String, unique: true, index: true },
   gender: String,
   password: String,
-  age: Number,
+  birthDay: Date,
   country: String,
 });
 usersSchema.index({ email: 1 });

@@ -16,19 +16,19 @@ userSignupRouter.post(
     .withMessage(
       "minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"
     ),
-  body("age").isInt({ min: 17 }).withMessage("from 16 years old "),
+  body("birthDay").isString(),
   body("country").isString().withMessage("please enter a valid country name "),
   validate,
   async (req, res) => {
     try {
-      const { email, gender, password, age, country } = req.body;
+      const { email, gender, password, birthDay, country } = req.body;
       const salt = await bcrypt.genSaltSync(saltRounds);
       const hash = await bcrypt.hashSync(password, salt);
       const newUser = new User({
         email,
         gender,
         password: hash,
-        age,
+        birthDay,
         country,
       });
 
