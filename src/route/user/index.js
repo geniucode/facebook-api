@@ -18,12 +18,12 @@ userRouter.post(
       if (userFound) {
         const isEqualWith = await bcrypt.compare(password, userFound.password);
         if (isEqualWith) {
-          res.send("Welcome Back");
+          res.send({ sucess: true });
         } else {
-          res.send("Invalid Credential");
+          res.send({ sucess: false });
         }
       } else {
-        res.send("Invalid Credential");
+        res.send({ sucess: false });
       }
     }
   }
