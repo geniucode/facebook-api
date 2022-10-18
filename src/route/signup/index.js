@@ -18,36 +18,28 @@ userSignupRouter.post(
     .withMessage(
       "minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"
     ),
-  body("age")
-    .isNumeric("age" < 16)
-    .withMessage("from 16 years old "),
+  body("age").isInt({ min: 17 }).withMessage("from 16 years old "),
   body("country").isString().withMessage("please enter a valid country name "),
   validate,
   async (req, res) => {
     try {
       const { email, gender, password, age, country } = req.body;
-      if (emailValidator.validate(email)) {
-        const salt = await bcrypt.genSaltSync(saltRounds);
-        const hash = await bcrypt.hashSync(password, salt);
-        const newUser = new User({
-          email,
-          gender,
-          password: hash,
-          age,
-          country,
-        });
+      const salt = await bcrypt.genSaltSync(saltRounds);
+      const hash = await bcrypt.hashSync(password, salt);
+      const newUser = new User({
+        email,
+        gender,
+        password: hash,
+        age,
+        country,
+      });
 
-        await newUser.save();
-        res.send({
-          message: "email is Valid and all data are successfully",
-        });
-      } else {
-        res.status(STATUS_CODE.NotFound).send({
-          message: "Please enter a Valid email address ",
-        });
-      }
+      await newUser.save();
+      res.send({
+        success: true,
+      });
     } catch (error) {
-      res.send("already added ");
+      res.send({ success: false });
     }
   }
 );
