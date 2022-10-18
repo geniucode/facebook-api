@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import { userRouter } from "./src/route/user/index.js";
-
 const app = express();
 
 app.use(express.json());

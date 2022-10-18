@@ -1,0 +1,77 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  background-color: silver;
+}
+
+.login-box {
+  box-shadow: 1px 1px 1px 1px silver;
+  outline: none;
+  padding: 10px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 5px;
+  height: 315px;
+  width: 396px;
+  gap: 10px;
+}
+
+.login-box > input[type="email"],
+.login-box > input[type="password"] {
+  padding-left: 20px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid silver;
+}
+
+.login-box > input[type="email"]::placeholder,
+.login-box > input[type="password"]::placeholder {
+  color: grey;
+  font-size: 15px;
+}
+
+input:focus {
+  outline: none !important;
+}
+.login-box > button {
+  cursor: pointer;
+}
+
+.login-box > button.loginBtn {
+  height: 50px;
+  border-radius: 5px;
+  background-color: #0291ff;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bolder;
+  margin-bottom: 5px;
+}
+
+hr {
+  width: 100%;
+  height: 0.2px;
+  background-color: silver;
+  opacity: 0.5;
+}
+
+/* .login-box > button.signupBtn {
+  text-align: center;
+  padding: 15px;
+  width: fit-content;
+  height: 50px;
+  border-radius: 5px;
+  background-color: #24b024;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bolder;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  align-self: center;
+} */
