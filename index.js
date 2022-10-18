@@ -1,13 +1,23 @@
 import express from "express";
+import { connectToDB } from "./dbconnection.js";
 import cors from "cors";
-import { userRouter } from "./src/route/user/index.js";
+import mongoose from "mongoose";
 
+import { userRouter } from "./src/route/user/index.js";
+import { signupRouter } from "./src/route/signup/index.js";
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(userRouter);
+app.use(signupRouter);
 
-app.listen(3001, () => {
-  console.log("listening on port 3001...");
-});
+
+connectToDB()
+  .then(() => {
+    console.log("Connected to Mongoose");
+    app.listen(3001, () => {
+      console.log("listening on port 3001...");
+    });
+  })
+  .catch((err) => console.log(err));
