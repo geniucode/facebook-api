@@ -4,7 +4,6 @@ import cors from "cors";
 
 import { userRouter } from "./src/route/user/index.js";
 
-import { userRouter } from "./src/route/user/index.js";
 import { userSignupRouter } from "./src/route/signup/index.js";
 const app = express();
 app.use(express.json());
