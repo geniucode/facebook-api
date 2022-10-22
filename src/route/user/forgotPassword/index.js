@@ -9,7 +9,7 @@ import { STATUS_CODE } from "../../../../code-status.js";
 const userForgotPasswordRouter = express.Router();
 
 userForgotPasswordRouter.post(
-  "/user/forgotPassword",
+  "/user/forgot-password",
   body("email")
     .notEmpty()
     .withMessage("Email is required")
@@ -25,10 +25,7 @@ userForgotPasswordRouter.post(
         const password = "123";
         const salt = await bcrypt.genSaltSync(saltRounds);
         const hashedPassword = await bcrypt.hashSync(password, salt);
-        const updateUser = await User.updateOne(
-          { email: email },
-          { password: hashedPassword }
-        );
+        await User.updateOne({ email: email }, { password: hashedPassword });
         //send the email
         async function main() {
           // Generate test SMTP service account from ethereal.email

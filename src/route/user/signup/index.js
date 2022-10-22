@@ -3,6 +3,7 @@ import { body } from "express-validator";
 import bcrypt from "bcrypt";
 import { validate } from "../../../utils/validator.js";
 import { User } from "../../../model/user/index.js";
+import { STATUS_CODE } from "../../../../code-status.js";
 
 const saltRounds = 10;
 const userSignupRouter = express.Router();
@@ -37,7 +38,7 @@ userSignupRouter.post(
         success: true,
       });
     } catch (error) {
-      res.send({ success: false });
+      res.status(STATUS_CODE.DuplicateOrBad).send({ success: false });
     }
   }
 );
