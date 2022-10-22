@@ -9,7 +9,7 @@ const userLoginRouter = express.Router();
 userLoginRouter.post(
   "/user/login",
   body("email").isEmail(),
-  body("password").isString(),
+  body("password").notEmpty().isString(),
   validate,
   async (req, res) => {
     const { email, password } = req.body;
