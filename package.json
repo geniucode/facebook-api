@@ -20,5 +20,12 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
+  },
+  "imports": {
+    "#root/*": "./*",
+    "#src/*": "./src/*",
+    "#model/*": "./src/model/*",
+    "#route/*": "./src/route/*",
+    "#utils/*": "./src/utils/*"
   }
 }
