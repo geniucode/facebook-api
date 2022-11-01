@@ -1,9 +1,9 @@
 import express from "express";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
-import { validate } from "../../../utils/validator.js";
-import { User } from "../../../model/user/index.js";
-import { STATUS_CODE } from "../../../../code-status.js";
+import { validate } from "#utils/validator.js";
+import { User } from "#model/user/index.js";
+import { STATUS_CODE } from "#root/code-status.js";
 
 const saltRounds = 10;
 const userSignupRouter = express.Router();

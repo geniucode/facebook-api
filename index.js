@@ -1,7 +1,7 @@
 import express from "express";
-import { connectToDB } from "./dbconnection.js";
 import cors from "cors";
-import { userRouter } from "./src/route/user/index.js";
+import { connectToDB } from "#root/dbconnection.js";
+import { userRouter } from "#route/user/index.js";
 
 const app = express();
 app.use(express.json());
