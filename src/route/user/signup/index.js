@@ -12,19 +12,13 @@ const userSignupRouter = express.Router();
 
 userSignupRouter.post(
   "/user/signup",
-<<<<<<< HEAD
-  body("email").isEmail().withMessage("Please enter a valid email"),
-  body("gender").isString().notEmpty().withMessage("male or female"),
-=======
   body("email").notEmpty().isEmail().withMessage("Please enter a valid email"),
   body("gender").notEmpty().isString().withMessage("male or female"),
->>>>>>> 418f5f59b126c19cf561f724fde54e290c982acd
   body("password")
     .isStrongPassword()
     .withMessage(
       "minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"
     ),
-<<<<<<< HEAD
   body("birthDay")
     .isString()
     .notEmpty()
@@ -34,39 +28,17 @@ userSignupRouter.post(
       if (typeof timestamp !== "number" || Number.isNaN(timestamp)) {
         return false;
       }
-      return date.toISOString().substring(0,10) === value;
+      return date.toISOString().substring(0, 10) === value;
     })
     .withMessage("please enter a valid date value"),
   body("country")
     .isString()
     .notEmpty()
     .withMessage("please enter a valid country name"),
-=======
-  body("birthDay").notEmpty().isString(),
-  body("country")
-    .notEmpty()
-    .isString()
-    .withMessage("please enter a valid country name "),
->>>>>>> 418f5f59b126c19cf561f724fde54e290c982acd
   validate,
   async (req, res) => {
     try {
       const { email, gender, password, birthDay, country } = req.body;
-<<<<<<< HEAD
-      const salt = await bcrypt.genSaltSync(saltRounds);
-      const hash = await bcrypt.hashSync(password, salt);
-      const newUser = new User({
-        email,
-        gender,
-        password: hash,
-        birthDay: new Date(birthDay),
-        country,
-      });
-      await newUser.save();
-      res.send({
-        success: true,
-      });
-=======
       const ageFinder = ageFunction(birthDay); //age Finder
       const userFound = await User.findOne({ email: email });
       if (userFound) {
@@ -95,7 +67,6 @@ userSignupRouter.post(
       } else {
         res.status(STATUS_CODE.BadInputs).send({ success: false });
       }
->>>>>>> 418f5f59b126c19cf561f724fde54e290c982acd
     } catch (error) {
       res.status(STATUS_CODE.DuplicateOrBad).send({ success: false, error });
     }
