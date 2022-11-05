@@ -46,7 +46,7 @@ userSignupRouter.post(
           password: hash,
           birthDay,
           country,
-          forgetPasswordToken: hash,
+          forgetPasswordToken: "",
         });
 
         await newUser.save();
