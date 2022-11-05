@@ -18,8 +18,8 @@ userResetPasswordRouter.get(
       const { forgetPasswordToken } = req.query;
       const tokenFound = await User.findOne({
         forgetPasswordToken: forgetPasswordToken,
-      });
-      if (tokenFound.id) {
+      }).lean();
+      if (tokenFound._id) {
         res.status(STATUS_CODE.OK).send({ success: true });
       } else {
         res.status(STATUS_CODE.BadInput).send({ success: false });
@@ -37,7 +37,9 @@ userResetPasswordRouter.post(
     .withMessage(
       "minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"
     ),
-  body("forgetPasswordToken").notEmpty().withMessage("Code from Email Should be Entered "),
+  body("forgetPasswordToken")
+    .notEmpty()
+    .withMessage("Code from Email Should be Entered "),
 
   validate,
   async (req, res) => {
@@ -45,18 +47,16 @@ userResetPasswordRouter.post(
       const { forgetPasswordToken, password } = req.body;
       const tokenFound = await User.findOne({
         forgetPasswordToken: forgetPasswordToken,
-      });
+      }).lean();
 
-      if (tokenFound.id) {
+      if (tokenFound._id) {
         const salt = await bcrypt.genSaltSync(saltRounds);
         const hash = await bcrypt.hashSync(password, salt);
 
         const updatePassword = await User.updateOne(
           { _id: tokenFound._id },
-          { password: hash }
+          { password: hash, forgetPasswordToken: "" }
         );
-        await updatePassword.save();
-
         res.status(STATUS_CODE.OK).send({ success: true });
       } else {
         res.status(STATUS_CODE.BadInput).send({ success: false });
