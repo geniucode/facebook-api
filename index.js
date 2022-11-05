@@ -1,11 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-
-import { connectToDB } from "./db-connection.js";
-import { userRouter } from "./src/route/user/index.js";
-import { userForgotPasswordRouter } from "./src/route/user/forgotPassword/index.js";
-import { userResetPasswordRouter } from "./src/route/user/resetPassword/index.js";
+import { userResetPasswordRouter } from "#route/user/resetPassword/index.js";
+import { connectToDB } from "#root/dbconnection.js";
+import { userRouter } from "#route/user/index.js";
 
 const app = express();
 dotenv.config();

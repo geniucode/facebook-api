@@ -5,9 +5,12 @@ import nodemailer from "nodemailer";
 import generatedNumber from "../../../utils/generatedNumber.js";
 import bcrypt from "bcrypt";
 import { body } from "express-validator";
-import { validate } from "../../../utils/validator.js";
-import { User } from "../../../model/user/index.js";
-import { STATUS_CODE } from "../../../../code-status.js";
+import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
+
+import { validate } from "#utils/validator.js";
+import { User } from "#model/user/index.js";
+import { STATUS_CODE } from "#root/code-status.js";
 
 const saltRounds = process.env.saltRounds;
 
