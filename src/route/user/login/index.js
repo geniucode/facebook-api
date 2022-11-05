@@ -1,8 +1,8 @@
 import express from "express";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
-import { validate } from "../../../utils/validator.js";
-import { User } from "../../../model/user/index.js";
+import { validate } from "#utils/validator.js";
+import { User } from "#model/user/index.js";
 
 const userLoginRouter = express.Router();
 
