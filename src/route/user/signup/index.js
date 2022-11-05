@@ -11,14 +11,28 @@ const userSignupRouter = express.Router();
 userSignupRouter.post(
   "/user/signup",
   body("email").isEmail().withMessage("Please enter a valid email"),
-  body("gender").isString().withMessage("male or female"),
+  body("gender").isString().notEmpty().withMessage("male or female"),
   body("password")
     .isStrongPassword()
     .withMessage(
       "minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"
     ),
-  body("birthDay").isString(),
-  body("country").isString().withMessage("please enter a valid country name "),
+  body("birthDay")
+    .isString()
+    .notEmpty()
+    .custom((value) => {
+      const date = new Date(value);
+      const timestamp = date.getTime();
+      if (typeof timestamp !== "number" || Number.isNaN(timestamp)) {
+        return false;
+      }
+      return date.toISOString().substring(0,10) === value;
+    })
+    .withMessage("please enter a valid date value"),
+  body("country")
+    .isString()
+    .notEmpty()
+    .withMessage("please enter a valid country name"),
   validate,
   async (req, res) => {
     try {
@@ -29,10 +43,9 @@ userSignupRouter.post(
         email,
         gender,
         password: hash,
-        birthDay,
+        birthDay: new Date(birthDay),
         country,
       });
-
       await newUser.save();
       res.send({
         success: true,
