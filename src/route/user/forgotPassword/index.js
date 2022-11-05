@@ -1,10 +1,15 @@
+// Find User Page
 import express from "express";
-import { body } from "express-validator";
+import generatedNumber from "../../../utils/generatedNumber.js";
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+import { body } from "express-validator";
+
 import { validate } from "#utils/validator.js";
 import { User } from "#model/user/index.js";
 import { STATUS_CODE } from "#root/code-status.js";
+import { mailVarification } from "#utils/mailer.js";
+
+const saltRounds = process.env.saltRounds;
 
 const userForgotPasswordRouter = express.Router();
 
@@ -19,52 +24,34 @@ userForgotPasswordRouter.post(
   async (req, res) => {
     try {
       const { email } = req.body;
-      const emailExists = await User.findOne({ email: email });
-      if (emailExists) {
-        const saltRounds = 10;
-        const password = "123";
-        const salt = await bcrypt.genSaltSync(saltRounds);
-        const hashedPassword = await bcrypt.hashSync(password, salt);
-        await User.updateOne({ email: email }, { password: hashedPassword });
-        //send the email
-        async function main() {
-          // Generate test SMTP service account from ethereal.email
-          // Only needed if you don't have a real mail account for testing
-          let testAccount = await nodemailer.createTestAccount();
+      const emailExists = await User.findOne({ email }).lean();
+      console.log(emailExists._id);
+      console.log(emailExists.id);
 
-          // create reusable transporter object using the default SMTP transport
-          let transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true, // true for 465, false for other ports
-            auth: {
-              user: "merndevs4@gmail.com", // generated ethereal user
-              pass: "euqnplfwwgpaylfx", // generated ethereal password
-            },
-          });
-          // send mail with defined transport object
-          let info = await transporter.sendMail({
-            from: '"Facebook Inc" forgotpassword@facebook.inc', // sender address
-            to: email, // list of receivers
-            subject: "Change Password", // Subject line
-            text: `Dear ${email}, <br/> you're password has been changed to: 123`, // plain text body
-            html: `Dear ${email}, <br/> you're password has been changed to: 123`, // html body
-          });
+      const salt = await bcrypt.genSaltSync(saltRounds);
+      const forgetPasswordToken = await bcrypt.hashSync(
+        generatedNumber(1),
+        salt
+      );
+      console.log(forgetPasswordToken);
 
-          transporter.verify().then(console.log).catch(console.error);
-          console.log("Message sent: %s", info.messageId);
-          // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+      if (emailExists._id) {
+        mailVarification({
+          from: '"Facebook Inc" forgotpassword@facebook.inc', // sender address
+          to: email, // list of receivers
+          subject: "Verification code ", // Subject line
+          text: `Dear ${email}, <br/> you're Code is  ${forgetPasswordToken} please click on the link below to enter code   `, // plain text body
+          html: `Dear ${email}, <br/> you're Code is  ${forgetPasswordToken} please click on the link below to enter code`, // html body
+        });
 
-          // Preview only available when sending through an Ethereal account
-          console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-          // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-        }
-
-        main().catch(console.error);
-
+        const updatePasswordToken = await User.updateOne(
+          { _id: emailExists._id },
+          { forgetPasswordToken }
+        );
+        console.log(updatePasswordToken);
         res.status(STATUS_CODE.OK).send({ success: true });
       } else {
-        res.status(STATUS_CODE.BadInput).send({ success: false });
+        res.status(STATUS_CODE.BadInputs).send({ success: false });
       }
     } catch (error) {
       res.status(STATUS_CODE.BadInput).send({ success: false });
