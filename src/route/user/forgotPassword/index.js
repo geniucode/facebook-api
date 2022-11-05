@@ -1,16 +1,13 @@
 // Find User Page
 import express from "express";
-import dotenv from "dotenv";
-import nodemailer from "nodemailer";
 import generatedNumber from "../../../utils/generatedNumber.js";
 import bcrypt from "bcrypt";
 import { body } from "express-validator";
-import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
 
 import { validate } from "#utils/validator.js";
 import { User } from "#model/user/index.js";
 import { STATUS_CODE } from "#root/code-status.js";
+import { mailVarification } from "#utils/mailer.js";
 
 const saltRounds = process.env.saltRounds;
 
@@ -27,7 +24,7 @@ userForgotPasswordRouter.post(
   async (req, res) => {
     try {
       const { email } = req.body;
-      const emailExists = await User.findOne({ email: email });
+      const emailExists = await User.findOne({ email }).lean();
       console.log(emailExists._id);
       console.log(emailExists.id);
 
@@ -38,7 +35,7 @@ userForgotPasswordRouter.post(
       );
       console.log(forgetPasswordToken);
 
-      if (emailExists.id) {
+      if (emailExists._id) {
         mailVarification({
           from: '"Facebook Inc" forgotpassword@facebook.inc', // sender address
           to: email, // list of receivers
@@ -48,11 +45,10 @@ userForgotPasswordRouter.post(
         });
 
         const updatePasswordToken = await User.updateOne(
-          { _id: email._id },
-          forgetPasswordToken
+          { _id: emailExists._id },
+          { forgetPasswordToken }
         );
-        await updatePasswordToken.save();
-
+        console.log(updatePasswordToken);
         res.status(STATUS_CODE.OK).send({ success: true });
       } else {
         res.status(STATUS_CODE.BadInputs).send({ success: false });

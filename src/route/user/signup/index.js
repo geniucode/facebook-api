@@ -31,21 +31,13 @@ userSignupRouter.post(
       const ageFinder = ageFunction(birthDay); //age Finder
       const userFound = await User.findOne({ email: email });
       if (userFound) {
-        res.status(STATUS_CODE.BadInput).send({ success: false });
+        res
+          .status(STATUS_CODE.BadInput)
+          .send({ success: false, message: "Email is already in use" });
         return;
       }
-      const salt = await bcrypt.genSaltSync(saltRounds);
-      const hash = await bcrypt.hashSync(password, salt);
-      const newUser = new User({
-        email,
-        gender,
-        password: hash,
-        birthDay,
-        country,
-      });
-
       console.log("age is: ", ageFunction(birthDay));
-      if (age >= process.env.age) {
+      if (ageFinder >= process.env.minage) {
         const salt = await bcrypt.genSaltSync(saltRounds);
         const hash = await bcrypt.hashSync(password, salt);
         const newUser = new User({
@@ -65,7 +57,7 @@ userSignupRouter.post(
         res.status(STATUS_CODE.BadInputs).send({ success: false });
       }
     } catch (error) {
-      res.status(STATUS_CODE.DuplicateOrBad).send({ success: false });
+      res.status(STATUS_CODE.DuplicateOrBad).send({ success: false, error });
     }
   }
 );
