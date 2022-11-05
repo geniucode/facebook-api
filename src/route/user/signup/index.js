@@ -19,11 +19,22 @@ userSignupRouter.post(
     .withMessage(
       "minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"
     ),
-  body("birthDay").notEmpty().isString(),
-  body("country")
-    .notEmpty()
+  body("birthDay")
     .isString()
-    .withMessage("please enter a valid country name "),
+    .notEmpty()
+    .custom((value) => {
+      const date = new Date(value);
+      const timestamp = date.getTime();
+      if (typeof timestamp !== "number" || Number.isNaN(timestamp)) {
+        return false;
+      }
+      return date.toISOString().substring(0, 10) === value;
+    })
+    .withMessage("please enter a valid date value"),
+  body("country")
+    .isString()
+    .notEmpty()
+    .withMessage("please enter a valid country name"),
   validate,
   async (req, res) => {
     try {

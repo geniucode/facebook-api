@@ -1,6 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { validate } from "#utils/validator.js";
 import { User } from "#model/user/index.js";
 
@@ -17,7 +18,12 @@ userLoginRouter.post(
     if (userFound) {
       const isEqualWith = await bcrypt.compare(password, userFound.password);
       if (isEqualWith) {
-        res.send({ sucess: true });
+        const jwtToken = jwt.sign(
+          { email: userFound.email },
+          "SecretKey",
+          { expiresIn: 86400 }
+        );
+        res.send({ sucess: true, jwtToken});
       } else {
         res.send({ sucess: false });
       }
