@@ -4,4 +4,5 @@ export const STATUS_CODE = {
   NotFound: 404,
   BadInput: 422,
   OK: 200,
+  Forbidden:403
 };
