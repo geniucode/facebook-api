@@ -1,11 +1,13 @@
 import express from "express";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import ageFunction from "../../../utils/ageFunction.js";
 import { validate } from "#utils/validator.js";
 import { User } from "#model/user/index.js";
 import { STATUS_CODE } from "#root/code-status.js";
 
-const saltRounds = 10;
+const saltRounds = process.env.saltRounds;
 const userSignupRouter = express.Router();
 
 userSignupRouter.post(
@@ -26,27 +28,36 @@ userSignupRouter.post(
   async (req, res) => {
     try {
       const { email, gender, password, birthDay, country } = req.body;
+      const ageFinder = ageFunction(birthDay); //age Finder
       const userFound = await User.findOne({ email: email });
       if (userFound) {
-        res.status(STATUS_CODE.BadInput).send({ success: false });
+        res
+          .status(STATUS_CODE.BadInput)
+          .send({ success: false, message: "Email is already in use" });
         return;
       }
-      const salt = await bcrypt.genSaltSync(saltRounds);
-      const hash = await bcrypt.hashSync(password, salt);
-      const newUser = new User({
-        email,
-        gender,
-        password: hash,
-        birthDay,
-        country,
-      });
+      console.log("age is: ", ageFunction(birthDay));
+      if (ageFinder >= process.env.minage) {
+        const salt = await bcrypt.genSaltSync(saltRounds);
+        const hash = await bcrypt.hashSync(password, salt);
+        const newUser = new User({
+          email,
+          gender,
+          password: hash,
+          birthDay,
+          country,
+          forgetPasswordToken: "",
+        });
 
-      await newUser.save();
-      res.send({
-        success: true,
-      });
+        await newUser.save();
+        res.send({
+          success: true,
+        });
+      } else {
+        res.status(STATUS_CODE.BadInputs).send({ success: false });
+      }
     } catch (error) {
-      res.status(STATUS_CODE.DuplicateOrBad).send({ success: false });
+      res.status(STATUS_CODE.DuplicateOrBad).send({ success: false, error });
     }
   }
 );
