@@ -1,10 +1,15 @@
+// Find User Page
 import express from "express";
+import dotenv from "dotenv";
+import nodemailer from "nodemailer";
+import generatedNumber from "../../../utils/generatedNumber.js";
+import bcrypt from "bcrypt";
 import { body } from "express-validator";
 import { validate } from "../../../utils/validator.js";
 import { User } from "../../../model/user/index.js";
-import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
 import { STATUS_CODE } from "../../../../code-status.js";
+
+const saltRounds = process.env.saltRounds;
 
 const userForgotPasswordRouter = express.Router();
 
@@ -20,35 +25,40 @@ userForgotPasswordRouter.post(
     try {
       const { email } = req.body;
       const emailExists = await User.findOne({ email: email });
-      if (emailExists) {
-        const saltRounds = 10;
-        const password = "123";
-        const salt = await bcrypt.genSaltSync(saltRounds);
-        const hashedPassword = await bcrypt.hashSync(password, salt);
-        await User.updateOne({ email: email }, { password: hashedPassword });
-        //send the email
-        async function main() {
+      console.log(emailExists._id);
+      console.log(emailExists.id);
+
+      const salt = await bcrypt.genSaltSync(saltRounds);
+      const forgetPasswordToken = await bcrypt.hashSync(
+        generatedNumber(1),
+        salt
+      );
+      console.log(forgetPasswordToken);
+
+      if (emailExists.id) {
+        async function mailVarification() {
           // Generate test SMTP service account from ethereal.email
           // Only needed if you don't have a real mail account for testing
           let testAccount = await nodemailer.createTestAccount();
 
           // create reusable transporter object using the default SMTP transport
           let transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true, // true for 465, false for other ports
+            host: process.env.mailHost,
+            port: process.env.mailPort,
+            secure: process.env.mailSecurity, // true for 465, false for other ports
+
             auth: {
-              user: "merndevs4@gmail.com", // generated ethereal user
-              pass: "euqnplfwwgpaylfx", // generated ethereal password
+              user: process.env.mailUser, // generated ethereal user
+              pass: process.env.mailPassword, // generated ethereal password
             },
           });
           // send mail with defined transport object
           let info = await transporter.sendMail({
             from: '"Facebook Inc" forgotpassword@facebook.inc', // sender address
             to: email, // list of receivers
-            subject: "Change Password", // Subject line
-            text: `Dear ${email}, <br/> you're password has been changed to: 123`, // plain text body
-            html: `Dear ${email}, <br/> you're password has been changed to: 123`, // html body
+            subject: "Verification code ", // Subject line
+            text: `Dear ${email}, <br/> you're Code is  ${forgetPasswordToken} please click on the link below to enter code   `, // plain text body
+            html: `Dear ${email}, <br/> you're Code is  ${forgetPasswordToken} please click on the link below to enter code`, // html body
           });
 
           transporter.verify().then(console.log).catch(console.error);
@@ -60,11 +70,16 @@ userForgotPasswordRouter.post(
           // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
         }
 
-        main().catch(console.error);
+        const updatePasswordToken = await User.updateOne(
+          { _id: email._id },
+          forgetPasswordToken
+        );
+        await updatePasswordToken.save();
 
+        mailVarification(); // .catch(console.error);
         res.status(STATUS_CODE.OK).send({ success: true });
       } else {
-        res.status(STATUS_CODE.BadInput).send({ success: false });
+        res.status(STATUS_CODE.BadInputs).send({ success: false });
       }
     } catch (error) {
       res.status(STATUS_CODE.BadInput).send({ success: false });
