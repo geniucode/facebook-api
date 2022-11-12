@@ -3,7 +3,6 @@ import express from "express";
 import generatedNumber from "../../../utils/generatedNumber.js";
 import bcrypt from "bcrypt";
 import { body } from "express-validator";
-
 import { validate } from "#utils/validator.js";
 import { User } from "#model/user/index.js";
 import { STATUS_CODE } from "#root/code-status.js";
@@ -25,15 +24,12 @@ userForgotPasswordRouter.post(
     try {
       const { email } = req.body;
       const emailExists = await User.findOne({ email }).lean();
-      console.log(emailExists._id);
-      console.log(emailExists.id);
 
       const salt = await bcrypt.genSaltSync(saltRounds);
       const forgetPasswordToken = await bcrypt.hashSync(
         generatedNumber(1),
         salt
       );
-      console.log(forgetPasswordToken);
 
       if (emailExists._id) {
         mailVarification({
@@ -48,13 +44,12 @@ userForgotPasswordRouter.post(
           { _id: emailExists._id },
           { forgetPasswordToken }
         );
-        console.log(updatePasswordToken);
-        res.status(STATUS_CODE.OK).send({ success: true });
+        res.status(STATUS_CODE.OK).send({ success: true,message: "token was sent to email successfully " });
       } else {
-        res.status(STATUS_CODE.BadInputs).send({ success: false });
+        res.status(STATUS_CODE.BadInputs).send({ success: false,message: "token was not  sent ,email was not found" });
       }
     } catch (error) {
-      res.status(STATUS_CODE.BadInput).send({ success: false });
+      res.status(STATUS_CODE.BadInput).send({ success: false,message: "catch error ,wrong entered data" });
     }
   }
 );

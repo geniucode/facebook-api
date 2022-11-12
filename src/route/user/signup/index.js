@@ -47,7 +47,6 @@ userSignupRouter.post(
           .send({ success: false, message: "Email is already in use" });
         return;
       }
-      console.log("age is: ", ageFunction(birthDay));
       if (ageFinder >= process.env.minage) {
         const salt = await bcrypt.genSaltSync(saltRounds);
         const hash = await bcrypt.hashSync(password, salt);
@@ -62,13 +61,13 @@ userSignupRouter.post(
 
         await newUser.save();
         res.send({
-          success: true,
+          success: true,message:"user is added sucessfully"
         });
       } else {
-        res.status(STATUS_CODE.BadInputs).send({ success: false });
+        res.status(STATUS_CODE.BadInputs).send({ success: false,message: "Age of user is less than approved"} );
       }
     } catch (error) {
-      res.status(STATUS_CODE.DuplicateOrBad).send({ success: false, error });
+      res.status(STATUS_CODE.DuplicateOrBad).send({ success: false, error,message: "wrong input,catch error return " });
     }
   }
 );
