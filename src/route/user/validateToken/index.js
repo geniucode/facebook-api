@@ -12,7 +12,7 @@ validateTokenRouter.post("/validate-token", (req, res) => {
       //  server understands the request but refuses to authorize it.
     }
     //req.user = user; it must if i need use token data in another route like const {username}=req.user
-    res.send({ seccuss: true, user });
+    res.send({ success: true, user });
   });
 });
 
