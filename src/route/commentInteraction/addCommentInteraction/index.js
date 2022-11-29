@@ -1,4 +1,4 @@
-// Find User Page
+
 import express from "express";
 import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
@@ -18,13 +18,17 @@ addCommentInteractionRouter .post(
   body("userId")
     .notEmpty()
     .withMessage("reaction is required"),
+  // body("commentId")
+  //   .notEmpty()
+  //   .withMessage("reaction is required"),
   
   validate,
   async (req, res) => {
     try {
-      const { reaction,userId } = req.body;
+      const { reaction,userId} = req.body;
        await CommentInteraction.create({reaction,userId});
-      res.send({success: true,message: "react with comment is done"})}
+       const interaction = await CommentInteraction.findOne({reaction,userId});
+      res.send({success: true,interaction:interaction ,message: "react with comment is done"})}
 
 catch (error) {
       res.status(STATUS_CODE.BadInput).send({ success: false,message: "catch error ,wrong entered data" });
