@@ -23,12 +23,12 @@ userLoginRouter.post(
           "SecretKey",
           { expiresIn: 86400 }
         );
-        res.send({ sucess: true, jwtToken,message: "login successful,correct username and password  "});
+        res.send({ success: true, jwtToken,message: "login successful,correct username and password  "});
       } else {
-        res.send({ sucess: false,message: "correct username but wrong password" });
+        res.send({ success: false,message: "correct username but wrong password" });
       }
     } else {
-      res.send({ sucess: false,message: " username/email not found " });
+      res.send({ success: false,message: " username/email not found " });
     }
   }
 );

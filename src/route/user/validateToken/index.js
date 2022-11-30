@@ -7,7 +7,7 @@ validateTokenRouter.post("/validate-token", (req, res) => {
   const token = req.body.jwtToken;
   jwt.verify(token, accessTokenSecret, (err, user) => {
     if (err) {
-      return res.status(STATUS_CODE.Forbidden).send({ seccuss: false });
+      return res.status(STATUS_CODE.Forbidden).send({ success: false });
       // The HTTP 403 Forbidden response status code indicates that the
       //  server understands the request but refuses to authorize it.
     }
