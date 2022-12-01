@@ -2,29 +2,30 @@ import express from "express";
 import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
 import { STATUS_CODE } from "#root/code-status.js";
-import { CommentInteraction } from "../../../model/commentInteraction/index.js";
+import { facebookReactComment } from "../../../model/facebookReactComment/index.js";
 
-const updateCommentInteractionRouter  = express.Router();
-updateCommentInteractionRouter .put(
-  "/comment/update-interaction",
-  body("interactionId").notEmpty().withMessage("interaction id is required"),
-  body("reaction")
+
+const updateCommentReactRouter  = express.Router();
+updateCommentReactRouter .put(
+  "/comment/update-react",
+  body("commentId").notEmpty().withMessage("comment id is required"),
+  body("react")
   .notEmpty()
-  .withMessage("reaction is required")
+  .withMessage("react is required")
   .isString()
-  .withMessage("Please enter a valid reaction"),
+  .withMessage("Please enter a valid react"),
   validate,
   async (req, res) => {
     try {
-      const { reaction,interactionId } = req.body;
-      const updateRes=await CommentInteraction.updateOne({ _id: interactionId },{reaction});
-      const arr=["Like", "Love", "Care", "Haha", "Wow", "Sad", "Angry"];
-      if(arr.includes(reaction)  && updateRes.modifiedCount==1)
-      res.send({ success: true, message: "update interaction comment done" });
-      else{
-        res.send({ success: false, message: "update interaction comment not done" });
+      const {react,commentId  } = req.body;
+      const findreact = await facebookReactComment.findOne({ commentId }).lean()
+      if(findreact){
+     await facebookReactComment.updateOne({commentId},{react},{ runValidators: true });
+      res.send({ success: true, message: "update react comment done" });
       }
-
+      else{
+        res.send({ success: false, message: "update react comment not done" });
+      }
     
     } catch (error) {
       res
@@ -34,4 +35,4 @@ updateCommentInteractionRouter .put(
   }
 );
 
-export { updateCommentInteractionRouter  };
+export { updateCommentReactRouter };

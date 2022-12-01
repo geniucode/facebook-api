@@ -2,23 +2,26 @@ import express from "express";
 import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
 import { STATUS_CODE } from "#root/code-status.js";
-import { CommentInteraction } from "../../../model/commentInteraction/index.js";
+import { facebookReactComment } from "../../../model/facebookReactComment/index.js";
 
-const deleteCommentInteractionRouter = express.Router();
-deleteCommentInteractionRouter.delete(
-  "/comment/delete-interaction",
-  body("interactionId").notEmpty().withMessage("interaction id is required"),
+
+
+const deleteCommentReactRouter = express.Router();
+deleteCommentReactRouter.delete(
+  "/comment/delete-react",
+  body("commentId").notEmpty().withMessage("comment id is required"),
 
   validate,
   async (req, res) => {
     try {
-      const { interactionId } = req.body;
-      const updateRes=await CommentInteraction.deleteOne({ _id: interactionId });
-      console.log(updateRes)
-      if(updateRes.deletedCount==1)
-      res.send({ success: true, message: "delete interaction comment done" });
+      const { commentId } = req.body;
+      const findreact = await facebookReactComment.findOne({ commentId }).lean()
+      if(findreact){
+        await facebookReactComment.deleteOne({ commentId });
+      res.send({ success: true, message: "delete react comment done" });
+      }
       else{
-        res.send({ success: false, message: "delete interaction comment not done" });
+        res.send({ success: false, message: "delete react comment not done" });
       }
     } catch (error) {
       res
@@ -28,4 +31,4 @@ deleteCommentInteractionRouter.delete(
   }
 );
 
-export { deleteCommentInteractionRouter };
+export { deleteCommentReactRouter };
