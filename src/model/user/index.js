@@ -6,7 +6,7 @@ const usersSchema = new Schema({
   password: String,
   birthDay: Date,
   country: String,
-  forgetPasswordToken : String
+  forgetPasswordToken: String,
 });
 usersSchema.index({ email: 1 });
 export const User = mongoose.model("User", usersSchema);
