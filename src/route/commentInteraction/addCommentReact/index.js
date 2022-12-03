@@ -22,25 +22,20 @@ addCommentReactRouter.post(
     try {
       const { react, userId, commentId } = req.body;
       const newReact = new facebookReactComment({ react, userId, commentId });
-      const findUser = await User.findOne({ _id:userId }).lean();
-      console.log(findUser)
-      if (findUser) {
-        const findReact = await facebookReactComment.findOne({ commentId }).lean();
-        if (findReact) {
-          await facebookReactComment.deleteOne({ commentId });
-          await newReact.save();
-          res.send({ success: true, message: "react with comment is done" });
-        } else {
-          await newReact.save();
-          res.send({ success: true, message: "react with comment is done" });
-        }
-      } else if(!findUser){
-        res.send({ success: false, message: "user not found" });
+      const findReact = await facebookReactComment
+        .findOne({ commentId })
+        .lean();
+      if (findReact) {
+        await facebookReactComment.deleteOne({ commentId });
       }
+      await newReact.save();
+      res.send({ success: true, message: "react with comment is done" });
     } catch (error) {
-      res
-        .status(STATUS_CODE.BadInput)
-        .send({ success: false, message: "catch error ,wrong entered data" });
+      res.status(STATUS_CODE.BadInput).send({
+        success: false,
+        message: "catch error ,wrong entered data",
+        error,
+      });
     }
   }
 );

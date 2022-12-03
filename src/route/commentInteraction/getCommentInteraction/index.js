@@ -6,7 +6,7 @@ const getCommentReactRouter = express.Router();
 getCommentReactRouter.get("/comment/get-react", async (req, res) => {
   try {
     const { commentId } = req.query;
-    const react = await facebookReactComment.findOne({ commentId }).lean();
+    const react = await facebookReactComment.find({ commentId }).lean();
     if (react) {
       res.send({
         success: true,
