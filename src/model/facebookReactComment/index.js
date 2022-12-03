@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { reactEnum } from "../../enum/react";
 const facebookReactCommentSchema = new mongoose.Schema({
   react: {
     type: String,
