@@ -2,14 +2,11 @@ import mongoose, { Schema } from "mongoose";
 const { ObjectId } = mongoose.Schema;
 
 const facebookReactPostSchema = new Schema({
-  reactionId: {
-    type: String,
-  },
-  reactedBy: {
+  userId: {
     type: ObjectId,
     ref: "User",
   },
-  reactedOnpost: {
+  postId: {
     type: ObjectId,
     ref: "facebookPost",
   },
