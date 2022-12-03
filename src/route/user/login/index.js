@@ -18,22 +18,17 @@ userLoginRouter.post(
     if (userFound) {
       const isEqualWith = await bcrypt.compare(password, userFound.password);
       if (isEqualWith) {
-        const jwtToken = jwt.sign({ email: userFound.email }, "SecretKey", {
-          expiresIn: 86400,
-        });
-        res.send({
-          sucess: true,
-          jwtToken,
-          message: "login successful,correct username and password  ",
-        });
+        const jwtToken = jwt.sign(
+          { email: userFound.email },
+          "SecretKey",
+          { expiresIn: 86400 }
+        );
+        res.send({ success: true, jwtToken,message: "login successful,correct username and password  "});
       } else {
-        res.send({
-          sucess: false,
-          message: "correct username but wrong password",
-        });
+        res.send({ success: false,message: "correct username but wrong password" });
       }
     } else {
-      res.send({ sucess: false, message: " username/email not found " });
+      res.send({ success: false,message: " username/email not found " });
     }
   }
 );
