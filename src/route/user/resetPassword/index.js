@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 import { validate } from "../../../utils/validator.js";
 import { User } from "../../../model/user/index.js";
 import { STATUS_CODE } from "../../../../code-status.js";
@@ -11,7 +11,7 @@ const userResetPasswordRouter = express.Router();
 
 userResetPasswordRouter.get(
   "/user/reset-password",
-  body("forgetPasswordToken").notEmpty().withMessage("Enter a Valid Token "),
+  query("forgetPasswordToken").notEmpty().withMessage("Enter a Valid Token "),
   validate,
   async (req, res) => {
     try {
@@ -20,12 +20,18 @@ userResetPasswordRouter.get(
         forgetPasswordToken: forgetPasswordToken,
       }).lean();
       if (tokenFound._id) {
-        res.status(STATUS_CODE.OK).send({ success: true,message: "forget password token found" });
+        res
+          .status(STATUS_CODE.OK)
+          .send({ success: true, message: "forget password token found" });
       } else {
-        res.status(STATUS_CODE.BadInput).send({ success: false,message: "token not found" });
+        res
+          .status(STATUS_CODE.BadInput)
+          .send({ success: false, message: "token not found" });
       }
     } catch (error) {
-      res.status(STATUS_CODE.BadInput).send({ success: false,message: "catch error,invalid input entered" });
+      res
+        .status(STATUS_CODE.BadInput)
+        .send({ success: false, message: "catch error,invalid input entered" });
     }
   }
 );
@@ -48,7 +54,7 @@ userResetPasswordRouter.post(
       const tokenFound = await User.findOne({
         forgetPasswordToken: forgetPasswordToken,
       }).lean();
-
+      console.log("im here");
       if (tokenFound._id) {
         const salt = await bcrypt.genSaltSync(saltRounds);
         const hash = await bcrypt.hashSync(password, salt);
@@ -57,12 +63,20 @@ userResetPasswordRouter.post(
           { _id: tokenFound._id },
           { password: hash, forgetPasswordToken: "" }
         );
-        res.status(STATUS_CODE.OK).send({ success: true,message: "New password entered successfully and added" });
+        res.status(STATUS_CODE.OK).send({
+          success: true,
+          message: "New password entered successfully and added",
+        });
       } else {
-        res.status(STATUS_CODE.BadInput).send({ success: false,message: "Token was not found or expired" });
+        res
+          .status(STATUS_CODE.BadInput)
+          .send({ success: false, message: "Token was not found or expired" });
       }
     } catch (error) {
-      res.status(STATUS_CODE.BadInput).send({ success: false,message: "catch error , Incorrect entered data token or password" });
+      res.status(STATUS_CODE.BadInput).send({
+        success: false,
+        message: "catch error , Incorrect entered data token or password",
+      });
     }
   }
 );

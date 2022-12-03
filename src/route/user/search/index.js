@@ -1,0 +1,30 @@
+import express from "express";
+import { query } from "express-validator";
+// import { validate } from "#utils/validator.js";
+import { STATUS_CODE } from "#root/code-status.js";
+import { User } from "../../../model/user/index.js";
+
+const userSearchRouter = express.Router();
+userSearchRouter.get("/user/search", query("gender"), async (req, res) => {
+  try {
+    const { gender } = req.query;
+    const usersFound = await User.find({ gender: gender }).lean();
+    if (usersFound.length > 0) {
+      return res.status(STATUS_CODE.OK).send({
+        success: true,
+        usersFound,
+      });
+    } else {
+      return res.status(STATUS_CODE.BadInput).send({
+        success: false,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(STATUS_CODE.BadInput)
+      .send({ success: false, message: err });
+  }
+});
+
+export { userSearchRouter };
