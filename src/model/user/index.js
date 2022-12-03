@@ -10,3 +10,7 @@ const usersSchema = new Schema({
 });
 usersSchema.index({ email: 1 });
 export const User = mongoose.model("User", usersSchema);
+
+
+
+
