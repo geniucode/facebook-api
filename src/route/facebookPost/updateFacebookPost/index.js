@@ -7,7 +7,7 @@ import { STATUS_CODE } from "#root/code-status.js";
 const updateFacebookPostRouter = express.Router();
 
 updateFacebookPostRouter.post(
-  "facebook-post/update-post-by-id",
+  "/facebook-post/update-post-by-id",
   body("_id")
     .notEmpty()
     .withMessage("Post ID is required to update"),

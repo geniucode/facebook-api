@@ -7,7 +7,7 @@ import { STATUS_CODE } from "#root/code-status.js";
 const deleteFacebookPostRouter = express.Router();
 
 deleteFacebookPostRouter.delete(
-  "facebook-post/delete-post-by-id",
+  "/facebook-post/delete-post-by-id",
   body("_id")
     .notEmpty()
     .withMessage("Post ID is required to delete"),

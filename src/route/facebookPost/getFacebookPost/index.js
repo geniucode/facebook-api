@@ -8,7 +8,7 @@ import { STATUS_CODE } from "#root/code-status.js";
 const getFacebookPostRouter = express.Router();
 
 getFacebookPostRouter.get(
-  "facebook-post/get-post-by-id",
+  "/facebook-post/get-post-by-id",
   query("_id").notEmpty().withMessage("Post ID is required to search"),
   validate,
   async (req, res) => {
@@ -31,7 +31,7 @@ getFacebookPostRouter.get(
 );
 
 getFacebookPostRouter.get(
-  "/get-post-by-user",
+  "/facebook-post/get-post-by-user",
   query("user").notEmpty().withMessage("User is required to search"),
   validate,
   async (req, res) => {

@@ -7,7 +7,7 @@ import { User } from "#model/user/index.js";
 const addFacebookPostRouter = express.Router();
 
 addFacebookPostRouter.post(
-  "facebook-post/add-post",
+  "/facebook-post/add-post",
   body("user").notEmpty().withMessage("User is required to post"),
   body("postBody").isString(),
   body("postImg").isString(),
