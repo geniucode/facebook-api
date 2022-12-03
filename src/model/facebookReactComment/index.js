@@ -5,7 +5,7 @@ const facebookReactCommentSchema = new mongoose.Schema({
     required: true,
     enum: ["Like", "Love", "Care", "Haha", "Wow", "Sad", "Angry"],
   },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref:"User", required: true },
   commentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "facebookComment",
