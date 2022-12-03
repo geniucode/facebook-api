@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 import { validate } from "../../../utils/validator.js";
 import { User } from "../../../model/user/index.js";
 import { STATUS_CODE } from "../../../../code-status.js";
@@ -11,7 +11,7 @@ const userResetPasswordRouter = express.Router();
 
 userResetPasswordRouter.get(
   "/user/reset-password",
-  body("forgetPasswordToken").notEmpty().withMessage("Enter a Valid Token "),
+  query("forgetPasswordToken").notEmpty().withMessage("Enter a Valid Token "),
   validate,
   async (req, res) => {
     try {
