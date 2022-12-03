@@ -1,11 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
-const facebookPostSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
-  postDate: Date,
-  postBody: Schema.Types.Mixed,
-  comments: [{ type: Schema.Types.ObjectId, ref: 'facebookComment'}],
-  reacts: [{ type: Schema.Types.ObjectId, ref: 'facebookReactPost'}],
-});
+const facebookPostSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    postBody: { type: String, required: false },
+    postImg: { type: String, required: false },
+  },
+  { timestamps: true }
+);
 
-export const FacebookPost = mongoose.model("facebookPost", facebookPostSchema);
+export const FacebookPost = mongoose.model("FacebookPost", facebookPostSchema);
