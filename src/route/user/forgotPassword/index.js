@@ -44,12 +44,24 @@ userForgotPasswordRouter.post(
           { _id: emailExists._id },
           { forgetPasswordToken }
         );
-        res.status(STATUS_CODE.OK).send({ success: true,message: "token was sent to email successfully " });
+        res
+          .status(STATUS_CODE.OK)
+          .send({
+            success: true,
+            message: "token was sent to email successfully ",
+          });
       } else {
-        res.status(STATUS_CODE.BadInputs).send({ success: false,message: "token was not  sent ,email was not found" });
+        res
+          .status(STATUS_CODE.BadInputs)
+          .send({
+            success: false,
+            message: "token was not  sent ,email was not found",
+          });
       }
     } catch (error) {
-      res.status(STATUS_CODE.BadInput).send({ success: false,message: "catch error ,wrong entered data" });
+      res
+        .status(STATUS_CODE.BadInput)
+        .send({ success: false, message: "catch error ,wrong entered data" });
     }
   }
 );
