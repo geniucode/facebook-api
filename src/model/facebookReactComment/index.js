@@ -11,7 +11,6 @@ const facebookReactCommentSchema = new mongoose.Schema({
     ref: "facebookComment",
     required: true,
     unique: true,
-    type:String
   },
 });
 
