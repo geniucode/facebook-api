@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { reactEnum } from "../../enum/react";
+import { reactEnum } from "../../enum/react.js";
 const facebookReactCommentSchema = new mongoose.Schema({
   react: {
     type: String,
@@ -9,12 +9,12 @@ const facebookReactCommentSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref:"User", required: true },
   commentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "facebookComment",
+    ref: "FacebookComment",
     required: true,
   },
 });
 
-export const facebookReactComment = mongoose.model(
-  "facebookReactComment",
+export const FacebookReactComment = mongoose.model(
+  "FacebookReactComment",
   facebookReactCommentSchema
 );
