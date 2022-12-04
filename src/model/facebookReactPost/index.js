@@ -13,10 +13,9 @@ const facebookReactPostSchema = new mongoose.Schema({
     enum: reactEnum,
   },
   postId: {
-    //type: mongoose.Schema.Types.ObjectId,
-    //ref: "facebookPost",
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "facebookPost",
     required: true,
-    type: String,
   },
 });
 
