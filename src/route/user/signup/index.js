@@ -12,6 +12,7 @@ const userSignupRouter = express.Router();
 
 userSignupRouter.post(
   "/user/signup",
+  body("name").notEmpty().isString().withMessage("Please enter a valid user name"),
   body("email").notEmpty().isEmail().withMessage("Please enter a valid email"),
   body("gender").notEmpty().isString().withMessage("male or female"),
   body("password")
@@ -38,9 +39,9 @@ userSignupRouter.post(
   validate,
   async (req, res) => {
     try {
-      const { email, gender, password, birthDay, country } = req.body;
+      const { name, email, gender, password, birthDay, country } = req.body;
       const ageFinder = ageFunction(birthDay); //age Finder
-      const userFound = await User.findOne({ email: email });
+      const userFound = await User.findOne({ email });
       if (userFound) {
         res
           .status(STATUS_CODE.BadInput)
@@ -51,6 +52,7 @@ userSignupRouter.post(
         const salt = await bcrypt.genSaltSync(saltRounds);
         const hash = await bcrypt.hashSync(password, salt);
         const newUser = new User({
+          name,
           email,
           gender,
           password: hash,

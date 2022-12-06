@@ -23,19 +23,18 @@ addFacebookPostRouter.post(
           postImg,
         });
         await newPost.save();
-        res.send({
-          success: true,
-          message: "Post added successfully",
-        });
+        res
+          .status(STATUS_CODE.OK)
+          .send({ success: true, message: "Post added successfully" });
       } else {
         res
-        .status(STATUS_CODE.UnAuthorized)
-        .send({ success: false, error, message: "User does not exist" });
+          .status(STATUS_CODE.UnAuthorized)
+          .send({ success: false, message: "User does not exist" });
       }
     } catch (error) {
       res
         .status(STATUS_CODE.DuplicateOrBad)
-        .send({ success: false, error, message: "wrong input" });
+        .send({ success: false, message: "Wrong input" });
     }
   }
 );

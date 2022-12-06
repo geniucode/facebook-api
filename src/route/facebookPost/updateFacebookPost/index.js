@@ -6,32 +6,30 @@ import { STATUS_CODE } from "#root/code-status.js";
 
 const updateFacebookPostRouter = express.Router();
 
-updateFacebookPostRouter.post(
+updateFacebookPostRouter.put(
   "/facebook-post/update-post-by-id",
-  body("_id")
-    .notEmpty()
-    .withMessage("Post ID is required to update"),
-  body("postBody").isString(),
-  body("postImg").isString(),
+  body("_id").notEmpty().withMessage("Post ID is required to update"),
   validate,
   async (req, res) => {
     try {
       const { _id, bostBody, postImg } = req.body;
-      const postFound = await FacebookPost.findOne({ _id });
-      if (postFound) {
-        FacebookPost.updateOne(
-          { _id: _id },
-          { bostBody: bostBody, postImg: postImg }
-        );
-      } else{
+      const post = await FacebookPost.findByIdAndUpdate(
+        { _id },
+        { bostBody, postImg }
+      );
+      if (post) {
         res
-        .status(STATUS_CODE.NotFound)
-        .send({ success: false, error, message: "Post not found" });
+          .status(STATUS_CODE.OK)
+          .send({ success: true, message: "Post updated successfully" });
+      } else {
+        res
+          .status(STATUS_CODE.NotFound)
+          .send({ success: false, message: "Post not found" });
       }
     } catch (error) {
       res
         .status(STATUS_CODE.DuplicateOrBad)
-        .send({ success: false, error, message: "wrong input" });
+        .send({ success: false, message: "Wrong input" });
     }
   }
 );
