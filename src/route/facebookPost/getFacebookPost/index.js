@@ -14,18 +14,18 @@ getFacebookPostRouter.get(
   async (req, res) => {
     try {
       const { _id } = req.query;
-      const postFound = await FacebookPost.findOne({ _id, });
+      const postFound = await FacebookPost.findOne({ _id });
       if (postFound) {
-        res.send({ success: true, post: postFound });
+        res.status(STATUS_CODE.OK).send({ success: true, post: postFound });
       } else {
         res
           .status(STATUS_CODE.NotFound)
-          .send({ success: false, error, message: "Post not found" });
+          .send({ success: false, message: "Post not found" });
       }
     } catch (error) {
       res
         .status(STATUS_CODE.DuplicateOrBad)
-        .send({ success: false, error, message: "wrong input" });
+        .send({ success: false, message: "Wrong input" });
     }
   }
 );
@@ -39,27 +39,25 @@ getFacebookPostRouter.get(
       const { user } = req.query;
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
-        const postFound = await FacebookPost.findOne({user,});
-        if (postFound) {
-          res.send({ success: true, post: postFound });
+        const postsFound = await FacebookPost.find({ user });
+        if (postsFound) {
+          res.status(STATUS_CODE.OK).send({ success: true, posts: postsFound });
         } else {
           res.status(STATUS_CODE.NotFound).send({
             success: false,
-            error,
             message: "No posts from this user were found",
           });
         }
       } else {
         res.status(STATUS_CODE.NotFound).send({
-            success: false,
-            error,
-            message: "User not found",
-          });
+          success: false,
+          message: "User not found",
+        });
       }
     } catch (error) {
       res
         .status(STATUS_CODE.DuplicateOrBad)
-        .send({ success: false, error, message: "wrong input" });
+        .send({ success: false, message: "Wrong input" });
     }
   }
 );
