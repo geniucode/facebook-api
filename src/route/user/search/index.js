@@ -5,10 +5,10 @@ import { STATUS_CODE } from "#root/code-status.js";
 import { User } from "../../../model/user/index.js";
 
 const userSearchRouter = express.Router();
-userSearchRouter.get("/user/search", query("gender"), async (req, res) => {
+userSearchRouter.get("/user/search", query("name"), async (req, res) => {
   try {
-    const { gender } = req.query;
-    const usersFound = await User.find({ gender: gender }).lean();
+    const { name } = req.query;
+    const usersFound = await User.find({ name: name }).lean();
     if (usersFound.length > 0) {
       return res.status(STATUS_CODE.OK).send({
         success: true,
