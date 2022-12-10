@@ -3,18 +3,22 @@ import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
 import { FacebookPost } from "#model/facebookPost/index.js";
 import { User } from "#model/user/index.js";
+import { withAuth } from "../../../utils/withAuth.js";
+import { STATUS_CODE } from "#root/code-status.js";
 
 const addFacebookPostRouter = express.Router();
 
 addFacebookPostRouter.post(
   "/facebook-post/add-post",
-  body("user").notEmpty().withMessage("User is required to post"),
+  withAuth,
   body("postBody").isString(),
   body("postImg").isString(),
   validate,
   async (req, res) => {
     try {
-      const { user, postBody, postImg } = req.body;
+      const member = req.user;
+      const user = member._id;
+      const { postBody, postImg } = req.body;
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
         const newPost = new FacebookPost({
