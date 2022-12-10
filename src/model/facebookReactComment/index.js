@@ -6,7 +6,7 @@ const facebookReactCommentSchema = new mongoose.Schema({
     required: true,
     enum: reactEnum,
   },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref:"User", required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   commentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "FacebookComment",

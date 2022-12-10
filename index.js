@@ -4,9 +4,9 @@ import dotenv from "dotenv";
 import { connectToDB } from "#root/db-connection.js";
 import { userRouter } from "#route/user/index.js";
 import { facebookPostRouter } from "#route/facebookPost/index.js";
-import { commentReactRouter } from "./src/route/facebookReactComment/index.js";
 
-
+import { commentReactRouter } from "./src/route/commentInteraction/index.js";
+import { postReactRouter } from "./src/route/facebookReackPost/index.js";
 
 const app = express();
 dotenv.config();
@@ -14,7 +14,8 @@ app.use(express.json());
 app.use(cors());
 app.use(userRouter);
 app.use(facebookPostRouter);
-app.use(commentReactRouter)
+app.use(commentReactRouter);
+app.use(postReactRouter);
 
 connectToDB()
   .then(() => {

@@ -8,26 +8,25 @@ const deleteFacebookPostRouter = express.Router();
 
 deleteFacebookPostRouter.delete(
   "/facebook-post/delete-post-by-id",
-  body("_id")
-    .notEmpty()
-    .withMessage("Post ID is required to delete"),
+  body("_id").notEmpty().withMessage("Post ID is required to delete"),
   validate,
   async (req, res) => {
     try {
       const { _id } = req.body;
-      const postFound = await FacebookPost.findOne({ _id, });
-      if (postFound) {
-        await FacebookPost.deleteOne(postFound);
-        res.send({ success: true, message: "Post deleted successfully" });
-      } else{
+      const post = await FacebookPost.findByIdAndDelete({ _id });
+      if (post) {
         res
-        .status(STATUS_CODE.NotFound)
-        .send({ success: false, error, message: "Post not found" });
+          .status(STATUS_CODE.OK)
+          .send({ success: true, message: "Post deleted successfully" });
+      } else {
+        res
+          .status(STATUS_CODE.NotFound)
+          .send({ success: false, message: "Post not found" });
       }
     } catch (error) {
       res
         .status(STATUS_CODE.DuplicateOrBad)
-        .send({ success: false, error, message: "wrong input" });
+        .send({ success: false, message: "Wrong input" });
     }
   }
 );

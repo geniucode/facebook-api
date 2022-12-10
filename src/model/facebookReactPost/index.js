@@ -1,21 +1,25 @@
-import mongoose, { Schema } from "mongoose";
-const { ObjectId } = mongoose.Schema;
+import mongoose from "mongoose";
+import { reactEnum } from "../../enum/react.js";
 
-const facebookReactPostSchema = new Schema({
+const facebookReactPostSchema = new mongoose.Schema({
   userId: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
+  },
+  react: {
+    type: String,
+    required: true,
+    enum: reactEnum,
   },
   postId: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "facebookPost",
+    required: true,
   },
-  // reaction: {
-  //   type: {ReactionEnum}
-  // }
 });
 
-export const FacebookReactPost = mongoose.model(
+export const facebookReactPost = mongoose.model(
   "facebookReactPost",
   facebookReactPostSchema
 );
