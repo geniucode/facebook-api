@@ -2,7 +2,7 @@ import express from "express";
 import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
 import { STATUS_CODE } from "#root/code-status.js";
-import { facebookReactComment } from "../../../model/facebookReactComment/index.js";
+import { FacebookReactComment } from "../../../model/FacebookReactComment/index.js";
 
 
 
@@ -10,14 +10,15 @@ const deleteCommentReactRouter = express.Router();
 deleteCommentReactRouter.delete(
   "/comment/delete-react",
   body("commentId").notEmpty().withMessage("comment id is required"),
+  body("userId").notEmpty().withMessage("userId required"),
 
   validate,
   async (req, res) => {
     try {
-      const { commentId } = req.body;
-      const findreact = await facebookReactComment.findOne({ commentId }).lean()
+      const { commentId,userId } = req.body;
+      const findreact = await FacebookReactComment.findOne({ commentId,userId }).lean()
       if(findreact){
-        await facebookReactComment.deleteOne({ commentId });
+        await FacebookReactComment.deleteOne({ commentId,userId });
       res.send({ success: true, message: "delete react comment done" });
       }
       else{

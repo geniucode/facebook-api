@@ -8,6 +8,9 @@ import { facebookCommentRouter } from "./src/route/facebookComment/index.js";
 import { commentReactRouter } from "./src/route/commentInteraction/index.js";
 
 
+import { commentReactRouter } from "./src/route/commentInteraction/index.js";
+import { postReactRouter } from "./src/route/facebookReackPost/index.js";
+
 const app = express();
 dotenv.config();
 app.use(express.json());
@@ -15,7 +18,7 @@ app.use(cors());
 app.use(userRouter);
 app.use(facebookPostRouter);
 app.use(facebookCommentRouter);
-app.use(commentReactRouter)
+app.use(postReactRouter);
 
 connectToDB()
   .then(() => {

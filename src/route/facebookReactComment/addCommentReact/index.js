@@ -2,8 +2,8 @@ import express from "express";
 import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
 import { STATUS_CODE } from "#root/code-status.js";
-import { User } from "../../../model/user/index.js";
-import { facebookReactComment } from "../../../model/facebookReactComment/index.js";
+import { FacebookReactComment } from "../../../model/FacebookReactComment/index.js";
+
 
 const addCommentReactRouter = express.Router();
 
@@ -21,12 +21,12 @@ addCommentReactRouter.post(
   async (req, res) => {
     try {
       const { react, userId, commentId } = req.body;
-      const newReact = new facebookReactComment({ react, userId, commentId });
-      const findReact = await facebookReactComment
-        .findOne({ commentId })
+      const newReact = new FacebookReactComment({ react, userId, commentId });
+      const findReact = await FacebookReactComment
+        .findOne({ userId, commentId })
         .lean();
       if (findReact) {
-        await facebookReactComment.deleteOne({ commentId });
+        await FacebookReactComment.deleteOne({ userId, commentId });
       }
       await newReact.save();
       res.send({ success: true, message: "react with comment is done" });

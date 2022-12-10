@@ -2,13 +2,14 @@ import express from "express";
 import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
 import { STATUS_CODE } from "#root/code-status.js";
-import { facebookReactComment } from "../../../model/facebookReactComment/index.js";
+import { FacebookReactComment } from "../../../model/FacebookReactComment/index.js";
 
 
 const updateCommentReactRouter  = express.Router();
 updateCommentReactRouter .put(
   "/comment/update-react",
   body("commentId").notEmpty().withMessage("comment id is required"),
+  body("userId").notEmpty().withMessage("userId required"),
   body("react")
   .notEmpty()
   .withMessage("react is required")
@@ -17,15 +18,13 @@ updateCommentReactRouter .put(
   validate,
   async (req, res) => {
     try {
-      const {react,commentId  } = req.body;
-      const findreact = await facebookReactComment.findOne({ commentId }).lean()
-      if(findreact){
-     await facebookReactComment.updateOne({commentId},{react},{ runValidators: true });
-      res.send({ success: true, message: "update react comment done" });
-      }
-      else{
-        res.send({ success: false, message: "update react comment not done" });
-      }
+      const {react,commentId,userId } = req.body;
+     const isApdate=await FacebookReactComment.updateOne({ commentId,userId },{react},{ runValidators: true });
+      if(isApdate.modifiedCount>0)
+     res.send({ success: true, message: "update react comment done" });
+     else
+     res.send({ success: false, message: "update react comment not done" });
+      
     
     } catch (error) {
       res
