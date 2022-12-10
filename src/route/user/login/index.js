@@ -19,7 +19,8 @@ userLoginRouter.post(
       const isEqualWith = await bcrypt.compare(password, userFound.password);
       if (isEqualWith) {
         const jwtToken = jwt.sign(
-          { email: userFound.email },
+          { email: userFound.email ,name:userFound.name,gender:userFound.gender,
+            birthDay:userFound.birthDay,country:userFound.country},
           "SecretKey",
           { expiresIn: 86400 }
         );
