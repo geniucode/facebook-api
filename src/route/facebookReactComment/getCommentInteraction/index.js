@@ -17,7 +17,7 @@ getCommentReactRouter.get("/comment/get-react", async (req, res) => {
     } else {
       res.send({
         success: false,
-        message: "react isn't exist",
+        message: "react isn't exist because comment isn't exist ",
       });
     }
   } catch (error) {
