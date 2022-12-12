@@ -17,6 +17,7 @@ userSearchRouter.get("/user/search", query("name"), async (req, res) => {
     } else {
       return res.status(STATUS_CODE.BadInput).send({
         success: false,
+        message: "User not found",
       });
     }
   } catch (err) {
