@@ -54,7 +54,6 @@ userResetPasswordRouter.post(
       const tokenFound = await User.findOne({
         forgetPasswordToken: forgetPasswordToken,
       }).lean();
-      console.log("im here");
       if (tokenFound._id) {
         const salt = await bcrypt.genSaltSync(saltRounds);
         const hash = await bcrypt.hashSync(password, salt);
