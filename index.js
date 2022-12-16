@@ -8,6 +8,7 @@ import { facebookCommentRouter } from "./src/route/facebookComment/index.js";
 
 import { commentReactRouter } from "./src/route/facebookReactComment/index.js";
 import { postReactRouter } from "./src/route/facebookReackPost/index.js";
+import { handleImageRouter } from "./src/route/handle-image/index.js";
 
 const app = express();
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(commentReactRouter);
 app.use(facebookPostRouter);
 app.use(facebookCommentRouter);
 app.use(postReactRouter);
+app.use(handleImageRouter)
 
 connectToDB()
   .then(() => {
