@@ -43,4 +43,40 @@ addFacebookPostRouter.post(
   }
 );
 
+addFacebookPostRouter.post(
+  "/facebook-post/add-post-with-image",
+  withAuth,
+  body("postBody").isString(),
+  body("postImg").isString(),
+  validate,
+  async (req, res) => {
+    try {
+      const member = req.user;
+      const user = member._id;
+      const { postBody, postImg } = req.body;
+
+      const userFound = await User.findOne({ _id: user });
+      if (userFound) {
+        const newPost = new FacebookPost({
+          user,
+          postBody,
+          postImg,
+        });
+        await newPost.save();
+        res
+          .status(STATUS_CODE.OK)
+          .send({ success: true, message: "Post added successfully" });
+      } else {
+        res
+          .status(STATUS_CODE.UnAuthorized)
+          .send({ success: false, message: "User does not exist" });
+      }
+    } catch (error) {
+      res
+        .status(STATUS_CODE.DuplicateOrBad)
+        .send({ success: false, message: error.message });
+    }
+  }
+);
+
 export { addFacebookPostRouter };
