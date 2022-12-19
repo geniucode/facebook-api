@@ -7,10 +7,8 @@ import { facebookPostRouter } from "#route/facebookPost/index.js";
 import { facebookCommentRouter } from "./src/route/facebookComment/index.js";
 
 import { commentReactRouter } from "./src/route/facebookReactComment/index.js";
-import { postReactRouter } from "./src/route/facebookReackPost/index.js";
-import { upload } from "./src/img-cloud-methods/upload-img.js";
-import { getListImages } from "./src/img-cloud-methods/get-list-images.js";
-import { download } from "./src/img-cloud-methods/download-img.js";
+import { postReactRouter } from "./src/route/facebookReackPost/index.js";;
+import { processImgWithGoogleCloudRouter } from "./src/route/processImgWithGoogleCloud/index.js";
 
 const app = express();
 dotenv.config();
@@ -21,9 +19,9 @@ app.use(commentReactRouter);
 app.use(facebookPostRouter);
 app.use(facebookCommentRouter);
 app.use(postReactRouter);
-app.post("/upload", upload);
-app.get("/images", getListImages);
-app.get("/imge/download", download);
+app.use(processImgWithGoogleCloudRouter)
+
+
 
 connectToDB()
   .then(() => {
