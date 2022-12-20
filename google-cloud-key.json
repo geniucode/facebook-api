@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "rabeefacebook",
+  "private_key_id": "daed8a0c31ba446e6e1000a02953ca708ed73feb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDA9CycaSVxNj4S\nTnbkRPF+8CpE95gX4pbMYjtzmsVolRDXYtl7FomO8llqY2uRGcvizhBI7zSlrPsg\n/KpVULBMifAam4N/vvoXJrA4tqi5yLju6q4E7141qHGbssqtFeDN36NlGeVLB+qd\nX5K6dP+MUgmky+9ME0XGthbr4DNWQW7+aRVEx6uGwGWCSurYi5NcAyyjrhNEwPE4\ncz+MDXPZ7pupb8BFg6OKGB/fKruLZ+NqKBBXPeVqpTBn5aqe2PJLhowy11HfNMpi\nHuX1T4FTl3JEc2h/SCku+qW7FqcYvvf47JPgwEqVHO8EBEP/sNOKKSdR/B+MCgG7\n1IWv4AlvAgMBAAECggEAThEckYXbH8Rt9bMoWC/qs0yRFYlFUHidQYEHA71dXHRf\nNX2pdysFqb+03J3v8euJebCclx2s49EqY8zGT7FPOxBeBC3iVMecYMyG5NNGTbB/\n3i42DQoZyETn/jIm3UOqSjFO5wNEqYhA7L4z29ulXwz8GOBn55QumXinqnRx4NXw\nf4wXij+ZP5m6YlWAIeRBZi8a5dDDEZzqmBzo/mk2e1Sc+kEKpKPIx46o2Ql67uvc\nWkbDum96s+QU9Sd0ZaDHQTfPweeIOKRQlpWMEd5MX3tfW7Wtx6a4qPmgQxLUwsBZ\nogOyYbBDw2Af/p6268BbfDZCZHxI5abwMDY3+O7c8QKBgQD5N8TMiukLZcphZUpc\nCkjC7//zo5fhzcm0wdRoJ6XTL66MttQLLpYQmeGmiKd4NDosu42hRlyEodDRF2Kr\nKYnwKHxLKa3MFKsuGdeFK7DsVS11+ieXgkbpszvTjqqt3DGdDjzUclbiYu277xK2\nrXcUwFiq7PdNxLl3+sBw4jS/cQKBgQDGNG38K6AJ6yVQksWNo3ZwpIu6587uylRl\nwt0kbxEC316gitRQZgya5TY5T4nzASWykVuidgHA/YR8WBADrm8Y01W0vGn4uCoL\ntWP0YBvoYQZpuc2YaIyE8Adukso7+9SjG0GbjPP8lUMlwEd6jrvhDCeOXBTnxczm\n+Bx+W2qm3wKBgCIVaXnb6aFga3xEgRXzZh4a+rNUhVohbdulwqn3+irW05V1D6zz\n0xw0H3NKLzU2V1p00BrlZ5PQGaHvA9SK2s2Yi98vtRA7J2onqJ0S66B2yb/f1XhY\nHeCqXZ1CXr9mZPao0tLvTEir5P2V5cZMFQQmhjniLLRbGk55YcZOeY5RAoGAULHj\n3Xj9bUxZIta+q43TmMTFRtE9xKaHee6+DilR6bN7WS1sh1ck5qNPUkH5zf+3k13u\nytP0ntgYam+IBZetD5RrHmxfUK3aIG43RbUjZ5ao/75v4A8gtrbqr6//ujArQETG\nj0fxxfIXJnWEJHecMmG6cRE4SayUYay+HQum/k0CgYAFy5PJxi9XHjnHDccIfr0I\nUJyf8T1YFkpTHV/B/0J66NgYe/vF2TechK4/7lf0+SSOQJe3gpqFF0P33jkqzsXF\n1JecUR8tU3CbSZ0bA+Zm/ej2qS1rpSU9bi5X8u39A4qoQ+GNMxf6IaMxiutWpRmT\nvNwTF0sOS4FpZcG148JGkg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "rabeefacebook@rabeefacebook.iam.gserviceaccount.com",
+  "client_id": "103877472757259389299",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/rabeefacebook%40rabeefacebook.iam.gserviceaccount.com"
+}
