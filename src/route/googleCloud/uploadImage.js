@@ -1,7 +1,7 @@
 import express from "express";
 import { format } from "util";
 import { Storage } from "@google-cloud/storage";
-import { processFileMiddleware } from "../utils/middlewareMulter.js";
+import { processFileMiddleware } from "../../utils/middlewareMulter.js";
 
 const uploadImageRouter = express.Router();
 

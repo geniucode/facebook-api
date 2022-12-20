@@ -18,5 +18,5 @@ const download = async (req, res) => {
   }
 };
 
-downloadByName.get("/imge/download", download);
+downloadByName.get("/images/download", download);
 export { downloadByName };

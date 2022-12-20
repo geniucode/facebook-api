@@ -8,7 +8,7 @@ import { facebookCommentRouter } from "./src/route/facebookComment/index.js";
 
 import { commentReactRouter } from "./src/route/facebookReactComment/index.js";
 import { postReactRouter } from "./src/route/facebookReackPost/index.js";
-import { googleImagesRouter } from "./src/route/googleCloudImages/index.js";
+import { googleImagesRouter } from "./src/route/googleCloud/index.js";
 
 const app = express();
 dotenv.config();
