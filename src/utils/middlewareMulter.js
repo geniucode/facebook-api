@@ -10,4 +10,4 @@ let processFile = Multer({
 
 let processFileMiddleware = util.promisify(processFile);
 
-export default { processFileMiddleware };
+export { processFileMiddleware };
