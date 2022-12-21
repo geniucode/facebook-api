@@ -1,5 +1,6 @@
 import express from "express";
 import { Storage } from "@google-cloud/storage";
+import { withAuth } from "../../utils/withAuth.js";
 
 const getAllImages = express.Router();
 
@@ -9,9 +10,7 @@ const bucket = storage.bucket("rabee-facebook-bucket");
 const getImages = async (req, res) => {
   try {
     const [files] = await bucket.getFiles();
-    console.log(files);
     let fileInfos = [];
-
     files.forEach((file) => {
       fileInfos.push({
         name: file.name,
@@ -29,6 +28,6 @@ const getImages = async (req, res) => {
   }
 };
 
-getAllImages.get("/images", getImages);
+getAllImages.get("/images", withAuth, getImages);
 
 export { getAllImages };

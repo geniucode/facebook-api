@@ -1,5 +1,6 @@
 import express from "express";
 import { Storage } from "@google-cloud/storage";
+import { withAuth } from "../../utils/withAuth.js";
 
 const downloadByName = express.Router();
 
@@ -9,7 +10,7 @@ const download = async (req, res) => {
   try {
     console.log(req.query.name);
     const [metaData] = await bucket.file(req.query.name).getMetadata();
-
+    console.log(metaData);
     res.redirect(metaData.mediaLink);
   } catch (err) {
     res.status(500).send({
@@ -18,5 +19,5 @@ const download = async (req, res) => {
   }
 };
 
-downloadByName.get("/images/download", download);
+downloadByName.get("/images/download", withAuth, download);
 export { downloadByName };

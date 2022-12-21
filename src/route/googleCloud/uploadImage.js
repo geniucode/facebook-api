@@ -2,6 +2,7 @@ import express from "express";
 import { format } from "util";
 import { Storage } from "@google-cloud/storage";
 import { processFileMiddleware } from "../../utils/middlewareMulter.js";
+import { withAuth } from "../../utils/withAuth.js";
 
 const uploadImageRouter = express.Router();
 
@@ -15,7 +16,6 @@ const upload = async (req, res) => {
     if (!req.file) {
       return res.status(400).send({ message: "Please upload a file!" });
     }
-    console.log(req.file);
     const blob = bucket.file(req.file.originalname);
     const blobStream = blob.createWriteStream({
       resumable: false,
@@ -59,6 +59,6 @@ const upload = async (req, res) => {
     });
   }
 };
-uploadImageRouter.post("/upload", upload);
+uploadImageRouter.post("/upload", withAuth, upload);
 
 export { uploadImageRouter };
