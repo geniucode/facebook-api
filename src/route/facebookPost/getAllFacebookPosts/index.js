@@ -8,6 +8,7 @@ const getAllFacebookPostRouter = express.Router();
 
 getAllFacebookPostRouter.get(
   "/facebook-post/get-all-posts",
+  withAuth,
   async (req, res) => {
     try {
       const postsFound = await FacebookPost.find({}).populate("user");
