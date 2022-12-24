@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 const accessTokenSecret = "SecretKey"; //i need to know it
 export const withAuth = async (req, res, next) => {
   let token = req.headers.authorization;
-  console.log(req.headers)
   if (token) {
     token = token.split(" ")[1];
     try {
