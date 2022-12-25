@@ -4,9 +4,9 @@ import { Storage } from "@google-cloud/storage";
 
 // Instantiate a storage client with credentials
 const storage = new Storage({
-  keyFilename: "facebook-project-372114-a4bf7f50bd8e.json",
+  keyFilename: "google-cloud-key.json",
 });
-const bucket = storage.bucket("mern-facebook-bucket");
+const bucket = storage.bucket("images-from-nodejs-server");
 
 const upload = async (req, res) => {
   try {
