@@ -4,16 +4,18 @@ import { STATUS_CODE } from "#root/code-status.js";
 import { withAuth } from "../../../utils/withAuth.js";
 import { FacebookPost } from "../../../model/facebookPost/index.js";
 
-const getAllFacebookPostRouter = express.Router();
+const getAllPostsRouter = express.Router();
 
-getAllFacebookPostRouter.get(
+getAllPostsRouter.get(
   "/facebook-post/get-all-posts",
   withAuth,
   async (req, res) => {
     try {
-      const postsFound = await FacebookPost.find({}).populate("user");
+      const postsFound = await FacebookPost.find({}).sort({updatedAt:-1}).limit(10).populate("user");
+
       if (postsFound) {
         res.status(STATUS_CODE.OK).send({ success: true, posts: postsFound });
+        console.log(postsFound)
       } else {
         res
           .status(STATUS_CODE.NotFound)
@@ -29,4 +31,4 @@ getAllFacebookPostRouter.get(
 
 
 
-export { getAllFacebookPostRouter };
+export { getAllPostsRouter };

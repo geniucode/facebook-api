@@ -12,10 +12,10 @@ updateFacebookPostRouter.put(
   validate,
   async (req, res) => {
     try {
-      const { _id, bostBody, postImg } = req.body;
+      const { _id, postBody, postImg } = req.body;
       const post = await FacebookPost.findByIdAndUpdate(
         { _id },
-        { bostBody, postImg }
+        { postBody, postImg }
       );
       if (post) {
         res
