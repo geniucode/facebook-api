@@ -10,43 +10,66 @@ const addFacebookFriendRequestRouter = express.Router();
 
 addFacebookFriendRequestRouter.post(
   "/friendRequest",
-  withAuth,
-  body("senderID")
-    .notEmpty()
-    .withMessage("senderID is required")
-    .isString()
-    .withMessage("Please enter a valid senderID is required"),
-  body("receiverID")
-    .notEmpty()
-    .withMessage("receiverID is required")
-    .isString()
-    .withMessage("Please enter a valid receiverID is required"),
+  //withAuth,
+  body("senderID").isString(),
+  body("receiverID").isString(),
   validate,
   async (req, res) => {
-    const { senderID, receiverID } = await req.body;
     try {
-      console.log("senderID is", senderID);
-      console.log("receiverID is", receiverID);
+      const { senderID, receiverID } = req.body;
       if (senderID !== receiverID) {
         const sender = await User.findById(senderID);
         const receiver = await User.findById(receiverID);
-        console.log("sender is: ", sender);
-        console.log("receiver is: ", receiver);
-        if (
-          !receiver.requests.includes(sender._id) &&
-          !receiver.friends.includes(sender._id)
-        ) {
-          await receiver.updateOne({
-            $push: requests.sender._id,
-          });
-          res.json({ message: "Friend request has been sent" });
-        } else {
-          res.status(400).json({ message: "Friend request already sent" });
+        const FacebookFriends = await FacebookFriend.findOne({
+          user: { name: receiver.name },
+          friends: senderID,
+        });
+        const FacebookFriendsRequest = await FacebookFriend.findOne({
+          user: { name: receiver.name },
+          requests: senderID,
+          // }).populate({
+          //   path: "requests",
+          //   match: {
+          //     user: { _id: receiverID },
+          //     requests: { requests: senderID },
+          //   },
+        });
+        // }).populate({
+        //   path: "requests",
+        //   match: { requests: senderID },
+        // .populate("requests")
+        // .where(requests === senderID);
+        if (FacebookFriends) {
+          console.log(FacebookFriends);
+          return res.send("You are already friends");
         }
+        if (FacebookFriendsRequest) {
+          console.log(FacebookFriendsRequest);
+          return res.send("You already sent a friend request");
+        } else {
+          const newRequest = new FacebookFriend({
+            usere: receiver,
+            requests: senderID,
+          });
+          await newRequest.save();
+          return res.send("Friend request sent successfully");
+        }
+
+        // if (
+        //   !FacebookFriend.receiver.requests.includes(sender._id) &&
+        //   !FacebookFriend.receiver.friends.includes(sender._id)
+        // ) {
+        //   await receiver.updateOne({
+        //     $push: requests.sender._id,
+        //   });
+        //   res.json({ message: "friend request has been sent" });
+        // } else {
+        //   res.status(400).json({ message: "already sent " });
+        // }
       } else {
         res
           .status(400)
-          .json({ message: "You cannot send a friend request to yourself " });
+          .json({ message: "you cannot send message to yourself " });
       }
     } catch (error) {
       res
