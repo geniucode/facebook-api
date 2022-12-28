@@ -12,6 +12,7 @@ const facebookFriendSchema = new Schema(
         3, //'friends'
       ],
     },
+    notification: { Boolean, default: false },
   },
   { timestamps: true }
 );
