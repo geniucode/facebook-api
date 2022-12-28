@@ -9,16 +9,29 @@ import { STATUS_CODE } from "#root/code-status.js";
 const addFacebookFriendRequestRouter = express.Router();
 
 addFacebookFriendRequestRouter.post(
-  "/friendRequest/:id",
-  //withAuth,
-  body("senderID").isString(),
-  body("receiverID").isString(),
+  "/friendRequest",
+  withAuth,
+  body("senderID")
+    .notEmpty()
+    .withMessage("senderID is required")
+    .isString()
+    .withMessage("Please enter a valid senderID is required"),
+  body("receiverID")
+    .notEmpty()
+    .withMessage("receiverID is required")
+    .isString()
+    .withMessage("Please enter a valid receiverID is required"),
   validate,
   async (req, res) => {
+    const { senderID, receiverID } = await req.body;
     try {
-      if (req.user.id !== req.params.id) {
-        const sender = await User.findById(req.user.id);
-        const receiver = await User.findById(req.params.id);
+      console.log("senderID is", senderID);
+      console.log("receiverID is", receiverID);
+      if (senderID !== receiverID) {
+        const sender = await User.findById(senderID);
+        const receiver = await User.findById(receiverID);
+        console.log("sender is: ", sender);
+        console.log("receiver is: ", receiver);
         if (
           !receiver.requests.includes(sender._id) &&
           !receiver.friends.includes(sender._id)
@@ -26,14 +39,14 @@ addFacebookFriendRequestRouter.post(
           await receiver.updateOne({
             $push: requests.sender._id,
           });
-          res.json({ message: "friend request has been sent" });
+          res.json({ message: "Friend request has been sent" });
         } else {
-          res.status(400).json({ message: "already sent " });
+          res.status(400).json({ message: "Friend request already sent" });
         }
       } else {
         res
           .status(400)
-          .json({ message: "you cannot send message to yourself " });
+          .json({ message: "You cannot send a friend request to yourself " });
       }
     } catch (error) {
       res
