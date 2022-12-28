@@ -18,61 +18,49 @@ addFacebookFriendRequestRouter.post(
     try {
       const { senderID, receiverID } = req.body;
       if (senderID !== receiverID) {
-        const sender = await User.findById(senderID);
-        const receiver = await User.findById(receiverID);
-        const FacebookFriends = await FacebookFriend.findOne({
-          user: { name: receiver.name },
-          friends: senderID,
+        const sendFriendRequestFirst = await FacebookFriend.findOne({
+          requester: senderID,
+          recipient: receiverID,
         });
-        const FacebookFriendsRequest = await FacebookFriend.findOne({
-          user: { name: receiver.name },
-          requests: senderID,
-          // }).populate({
-          //   path: "requests",
-          //   match: {
-          //     user: { _id: receiverID },
-          //     requests: { requests: senderID },
-          //   },
-        });
-        // }).populate({
-        //   path: "requests",
-        //   match: { requests: senderID },
-        // .populate("requests")
-        // .where(requests === senderID);
-        if (FacebookFriends) {
-          console.log(FacebookFriends);
-          return res.send("You are already friends");
-        }
-        if (FacebookFriendsRequest) {
-          console.log(FacebookFriendsRequest);
-          return res.send("You already sent a friend request");
+        if (!sendFriendRequestFirst) {
+          const sendFriendRequest = await FacebookFriend.findOneAndUpdate(
+            { requester: senderID, recipient: receiverID },
+            { $set: { status: 1 } },
+            { upsert: true, new: true }
+          );
         } else {
-          const newRequest = new FacebookFriend({
-            usere: receiver,
-            requests: senderID,
+          return res.status(STATUS_CODE.DuplicateOrBad).send({
+            success: false,
+            message: "You Already sent a friend request for this person!",
           });
-          await newRequest.save();
-          return res.send("Friend request sent successfully");
         }
-
-        // if (
-        //   !FacebookFriend.receiver.requests.includes(sender._id) &&
-        //   !FacebookFriend.receiver.friends.includes(sender._id)
-        // ) {
-        //   await receiver.updateOne({
-        //     $push: requests.sender._id,
-        //   });
-        //   res.json({ message: "friend request has been sent" });
-        // } else {
-        //   res.status(400).json({ message: "already sent " });
-        // }
+        const getFriendRequestFirst = await FacebookFriend.findOne({
+          recipient: senderID,
+          requester: receiverID,
+        });
+        if (!getFriendRequestFirst) {
+          await FacebookFriend.findOneAndUpdate(
+            { recipient: senderID, requester: receiverID },
+            { $set: { status: 2 } },
+            { upsert: true, new: true }
+          );
+          return res.status(STATUS_CODE.OK).send({
+            success: true,
+            message: "Friend request sent successfully!",
+          });
+        } else {
+          return res.status(STATUS_CODE.DuplicateOrBad).send({
+            success: false,
+            message: "You Already sent a friend request for this person!",
+          });
+        }
       } else {
-        res
-          .status(400)
-          .json({ message: "you cannot send message to yourself " });
+        return res
+          .status(STATUS_CODE.BadInput)
+          .json({ message: "you cannot add yourself " });
       }
     } catch (error) {
-      res
+      return res
         .status(STATUS_CODE.DuplicateOrBad)
         .send({ success: false, message: "Wrong input" });
     }
