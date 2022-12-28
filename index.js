@@ -8,6 +8,7 @@ import { facebookCommentRouter } from "./src/route/facebookComment/index.js";
 import { commentReactRouter } from "./src/route/facebookReactComment/index.js";
 import { postReactRouter } from "./src/route/facebookReackPost/index.js";
 import { googleCloudServiceRouter } from "./src/route/googleCloudService/index.js";
+import { addFacebookFriendRequestRouter } from "./src/route/friend/index.js";
 
 const app = express();
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(facebookPostRouter);
 app.use(facebookCommentRouter);
 app.use(postReactRouter);
 app.use(googleCloudServiceRouter);
+app.use(addFacebookFriendRequestRouter);
 
 connectToDB()
   .then(() => {
