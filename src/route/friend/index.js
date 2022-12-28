@@ -25,28 +25,12 @@ addFacebookFriendRequestRouter.post(
         if (!sendFriendRequestFirst) {
           const sendFriendRequest = await FacebookFriend.findOneAndUpdate(
             { requester: senderID, recipient: receiverID },
-            { $set: { status: 1 } },
-            { upsert: true, new: true }
-          );
-        } else {
-          return res.status(STATUS_CODE.DuplicateOrBad).send({
-            success: false,
-            message: "You Already sent a friend request for this person!",
-          });
-        }
-        const getFriendRequestFirst = await FacebookFriend.findOne({
-          recipient: senderID,
-          requester: receiverID,
-        });
-        if (!getFriendRequestFirst) {
-          await FacebookFriend.findOneAndUpdate(
-            { recipient: senderID, requester: receiverID },
-            { $set: { status: 2 } },
+            { $set: { status: 1, notification: false } },
             { upsert: true, new: true }
           );
           return res.status(STATUS_CODE.OK).send({
             success: true,
-            message: "Friend request sent successfully!",
+            message: "Friend Request sent successfully!",
           });
         } else {
           return res.status(STATUS_CODE.DuplicateOrBad).send({
@@ -54,6 +38,26 @@ addFacebookFriendRequestRouter.post(
             message: "You Already sent a friend request for this person!",
           });
         }
+        // const getFriendRequestFirst = await FacebookFriend.findOne({
+        //   recipient: senderID,
+        //   requester: receiverID,
+        // });
+        // if (!getFriendRequestFirst) {
+        //   await FacebookFriend.findOneAndUpdate(
+        //     { recipient: senderID, requester: receiverID },
+        //     { $set: { status: 2 } },
+        //     { upsert: true, new: true }
+        //   );
+        //   return res.status(STATUS_CODE.OK).send({
+        //     success: true,
+        //     message: "Friend request sent successfully!",
+        //   });
+        // } else {
+        //   return res.status(STATUS_CODE.DuplicateOrBad).send({
+        //     success: false,
+        //     message: "You Already sent a friend request for this person!",
+        //   });
+        // }
       } else {
         return res
           .status(STATUS_CODE.BadInput)
