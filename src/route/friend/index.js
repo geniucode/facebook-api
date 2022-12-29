@@ -24,7 +24,12 @@ addFacebookFriendRequestRouter.post(
         });
         if (!sendFriendRequestFirst) {
           const sendFriendRequest = await FacebookFriend.findOneAndUpdate(
-            { requester: senderID, recipient: receiverID },
+            {
+              requester: senderID,
+              recipient: receiverID,
+            },
+            // Ask Faraj about populating
+            //.populate("requester", "recipient"),
             { $set: { status: 1, notification: false } },
             { upsert: true, new: true }
           );

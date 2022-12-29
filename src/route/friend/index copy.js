@@ -25,13 +25,9 @@ addFacebookFriendRequestRouter.post(
   async (req, res) => {
     const { senderID, receiverID } = await req.body;
     try {
-      console.log("senderID is", senderID);
-      console.log("receiverID is", receiverID);
       if (senderID !== receiverID) {
         const sender = await User.findById(senderID);
         const receiver = await User.findById(receiverID);
-        console.log("sender is: ", sender.name);
-        console.log("receiver is: ", receiver.name);
         const requestFound = FacebookFriend.find({
           "requests._id": senderID,
         });
