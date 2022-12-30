@@ -40,12 +40,6 @@ addFacebookFriendRequestRouter.post(
           (!FacebookFriend.User._id === receiverID &&
             !FacebookFriend.friends.includes(sender._id))
         ) {
-          // console.log(requestFound);
-          // if (requestFound.length === 0 && friendsFound.length === 0) {
-
-          // await receiver.updateOne({
-          //   $push: requests.sender._id,
-          // });
           res.json({ message: "Friend request has been sent" });
         } else {
           res.status(400).json({ message: "Friend request already sent" });

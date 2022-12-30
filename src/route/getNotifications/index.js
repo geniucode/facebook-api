@@ -12,9 +12,7 @@ getNotificationsRouter.get("/user/notifications", async (req, res) => {
     const userFound = await User.findOne({
       _id: user,
     });
-    console.log("userfound is:", userFound);
-    console.log("userFound id is:", userFound._id);
-    console.log("userFound name is:", userFound.name);
+
     const notificationsFound = await FacebookFriend.find()
       .populate("requester")
       .where({
