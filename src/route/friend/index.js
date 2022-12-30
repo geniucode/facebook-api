@@ -17,22 +17,28 @@ addFacebookFriendRequestRouter.post(
   async (req, res) => {
     try {
       const { senderID, receiverID } = req.body;
+      const sender = await User.findById(senderID);
+      const receiver = await User.findById(receiverID);
       if (senderID !== receiverID) {
         const sendFriendRequestFirst = await FacebookFriend.findOne({
-          requester: senderID,
-          recipient: receiverID,
+          requester: sender,
+          recipient: receiver,
         });
+
         if (!sendFriendRequestFirst) {
-          const sendFriendRequest = await FacebookFriend.findOneAndUpdate(
-            {
-              requester: senderID,
-              recipient: receiverID,
-            },
-            // Ask Faraj about populating
-            //.populate("requester", "recipient"),
-            { $set: { status: 1, notification: false } },
-            { upsert: true, new: true }
-          );
+          const newFriendRequest = new FacebookFriend({
+            recipient: receiver,
+            requester: sender,
+            status: 1,
+            notification: false,
+          });
+
+          await newFriendRequest.save();
+
+          // Ask Faraj about populating
+          //.populate("requester", "recipient"),
+          // { $set: { status: 1 } },
+          // { upsert: true, new: true }
           return res.status(STATUS_CODE.OK).send({
             success: true,
             message: "Friend Request sent successfully!",
@@ -69,6 +75,7 @@ addFacebookFriendRequestRouter.post(
           .json({ message: "you cannot add yourself " });
       }
     } catch (error) {
+      console.log(error);
       return res
         .status(STATUS_CODE.DuplicateOrBad)
         .send({ success: false, message: "Wrong input" });

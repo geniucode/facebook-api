@@ -1,6 +1,7 @@
 import express from "express";
 import { query } from "express-validator";
 import { STATUS_CODE } from "#root/code-status.js";
+import { User } from "../../model/user/index.js";
 import { FacebookFriend } from "../../model/friend/index.js";
 
 const getNotificationsRouter = express.Router();
@@ -8,12 +9,20 @@ const getNotificationsRouter = express.Router();
 getNotificationsRouter.get("/user/notifications", async (req, res) => {
   const { user } = req.query;
   try {
-    const notificationsFound = await FacebookFriend.find({
-      recipient: user,
-      notification: false,
+    const userFound = await User.findOne({
+      _id: user,
     });
-    console.log(notificationsFound);
-    if (notificationsFound) {
+    console.log("userfound is:", userFound);
+    console.log("userFound id is:", userFound._id);
+    console.log("userFound name is:", userFound.name);
+    const notificationsFound = await FacebookFriend.find()
+      .populate("requester")
+      .where({
+        recipient: userFound._id,
+        notification: false,
+      });
+
+    if (notificationsFound.length > 0) {
       res
         .status(STATUS_CODE.OK)
         .send({ success: true, notifications: notificationsFound });
