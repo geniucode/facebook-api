@@ -8,6 +8,7 @@ const usersSchema = new Schema({
   birthDay: Date,
   country: String,
   forgetPasswordToken: String,
+  friends: [{ type: Schema.Types.ObjectId, ref: "Friends" }],
 });
 usersSchema.index({ email: 1 });
 export const User = mongoose.model("User", usersSchema);
