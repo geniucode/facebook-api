@@ -1,4 +1,8 @@
 import mongoose, { Schema } from "mongoose";
+export const statusConstants = {
+  pending: "pending", //'pending',
+  accepted: "accepted", //'friends'=>accepted
+};
 const facebookFriendSchema = new Schema(
   {
     requester: { type: Schema.Types.ObjectId, ref: "User" },
@@ -6,10 +10,10 @@ const facebookFriendSchema = new Schema(
     status: {
       type: String,
       enums: [
-        "pending", //'pending',
-        "accepted", //'friends'=>accepted
+        statusConstants.pending, //'pending',
+        statusConstants.accepted, //'friends'=>accepted
       ],
-      default: "pending",
+      default: statusConstants.pending,
     },
     notification: { type: Boolean, default: false },
   },

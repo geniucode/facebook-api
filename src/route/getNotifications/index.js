@@ -2,38 +2,39 @@ import express from "express";
 import { query } from "express-validator";
 import { STATUS_CODE } from "#root/code-status.js";
 import { User } from "../../model/user/index.js";
-import { FacebookFriend } from "../../model/friend/index.js";
+import { FacebookFriend, statusConstants } from "../../model/friend/index.js";
+import { withAuth } from "../../utils/withAuth.js";
 
-const getNotificationsRouter = express.Router();
+const getFriendsNotificationsRouter = express.Router();
 
-getNotificationsRouter.get("/user/notifications", async (req, res) => {
-  const { user } = req.query;
-  try {
-    const userFound = await User.findOne({
-      _id: user,
-    });
+getFriendsNotificationsRouter.get(
+  "/user/friend-notifications",
+  withAuth,
+  async (req, res) => {
+    const recipient = req.user._id;
+    try {
+      const notificationsFound = await FacebookFriend.find({
+        recipient,
+        status: statusConstants.pending,
+      })
+        .populate("requester")
+        .lean();
 
-    const notificationsFound = await FacebookFriend.find()
-      .populate("requester")
-      .where({
-        recipient: userFound._id,
-        notification: false,
-      });
-
-    if (notificationsFound.length > 0) {
+      if (notificationsFound.length > 0) {
+        res
+          .status(STATUS_CODE.OK)
+          .send({ success: true, notifications: notificationsFound });
+      } else {
+        res
+          .status(STATUS_CODE.NotFound)
+          .send({ success: false, message: "no notifications" });
+      }
+    } catch (error) {
       res
-        .status(STATUS_CODE.OK)
-        .send({ success: true, notifications: notificationsFound });
-    } else {
-      res
-        .status(STATUS_CODE.NotFound)
-        .send({ success: false, message: "no notifications" });
+        .status(STATUS_CODE.DuplicateOrBad)
+        .send({ success: false, message: "Wrong input" });
     }
-  } catch (error) {
-    res
-      .status(STATUS_CODE.DuplicateOrBad)
-      .send({ success: false, message: "Wrong input" });
   }
-});
+);
 
-export { getNotificationsRouter };
+export { getFriendsNotificationsRouter };
