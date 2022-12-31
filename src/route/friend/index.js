@@ -27,28 +27,24 @@ addFacebookFriendRequestRouter.post(
 );
 
 addFacebookFriendRequestRouter.post(
-  "/friendRequest",
+  "/friend-request",
   withAuth,
-  body("senderID").isString(),
-  body("receiverID").isString(),
+  body("recipient").isMongoId(),
   validate,
   async (req, res) => {
     try {
-      const { senderID, receiverID } = req.body;
-      const sender = await User.findById(senderID);
-      const receiver = await User.findById(receiverID);
-      if (senderID !== receiverID) {
+      const { recipient } = req.body;
+      const requester = req.user._id;
+      if (requester !== recipient) {
         const sendFriendRequestFirst = await FacebookFriend.findOne({
-          requester: sender,
-          recipient: receiver,
+          requester,
+          recipient,
         });
 
         if (!sendFriendRequestFirst) {
           const newFriendRequest = new FacebookFriend({
-            recipient: receiver,
-            requester: sender,
-            status: 1,
-            notification: false,
+            recipient,
+            requester,
           });
 
           await newFriendRequest.save();
