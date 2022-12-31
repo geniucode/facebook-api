@@ -1,6 +1,5 @@
 import express from "express";
 import { query } from "express-validator";
-// import { validate } from "#utils/validator.js";
 import { STATUS_CODE } from "#root/code-status.js";
 import { User } from "../../../model/user/index.js";
 
