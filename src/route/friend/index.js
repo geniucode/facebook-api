@@ -16,7 +16,6 @@ addFacebookFriendRequestRouter.post(
     const { notifications } = req.body;
     try {
       notifications.map(async (notification) => {
-        console.log("1:", notification._id);
         await FacebookFriend.findByIdAndUpdate(notification._id, {
           notification: true,
         });
