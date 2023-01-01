@@ -12,7 +12,9 @@ userSearchRouter.get(
   async (req, res) => {
     try {
       const { name } = req.query;
-      const usersFound = await User.find({ name: name }).lean();
+      const usersFound = await User.find({
+        name: { $regex: name, $options: "i" },
+      }).lean();
       if (usersFound.length > 0) {
         return res.status(STATUS_CODE.OK).send({
           success: true,
