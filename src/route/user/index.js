@@ -5,6 +5,7 @@ import { userForgotPasswordRouter } from "./forgotPassword/index.js";
 import { userResetPasswordRouter } from "./resetPassword/index.js";
 import { userSearchRouter } from "./search/index.js";
 import { validateTokenRouter } from "./validateToken/index.js";
+import { getUserByIdRouter } from "./getUserById/index.js";
 
 
 const userRouter = express.Router();
@@ -14,6 +15,7 @@ userRouter.use(userForgotPasswordRouter);
 userRouter.use(userResetPasswordRouter);
 userRouter.use(userSearchRouter);
 userRouter.use(validateTokenRouter);
+userRouter.use(getUserByIdRouter);
 
 
 export { userRouter };

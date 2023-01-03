@@ -6,7 +6,7 @@ import { Storage } from "@google-cloud/storage";
 const storage = new Storage({
   keyFilename: "google-cloud-key.json",
 });
-const bucket = storage.bucket("images-from-nodejs-server");
+const bucket = storage.bucket("all-images-bucket");
 
 const upload = async (req, res) => {
   try {
