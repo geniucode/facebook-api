@@ -26,6 +26,7 @@ userLoginRouter.post(
             gender: userFound.gender,
             birthDay: userFound.birthDay,
             country: userFound.country,
+            friends: userFound.friends,
           },
           "SecretKey",
           { expiresIn: 86400 }
