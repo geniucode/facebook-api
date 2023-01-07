@@ -17,7 +17,7 @@ addFacebookFriendRequestRouter.post(
     const { id } = req.body;
     const user = req.user._id;
     try {
-      const res = await FacebookFriend.findByIdAndUpdate(id, {
+      const resp = await FacebookFriend.findByIdAndUpdate(id, {
         status: statusConstants.accepted,
       });
       const requester = await User.findOneAndUpdate(
@@ -28,7 +28,17 @@ addFacebookFriendRequestRouter.post(
         { _id: user },
         { $push: { friends: res.requester } }
       );
-      console.log(res);
+      if (resp) {
+        return res.status(STATUS_CODE.OK).send({
+          success: true,
+          message: "Friend Request has been accepted!",
+        });
+      } else {
+        return res.status(STATUS_CODE.DuplicateOrBad).send({
+          success: false,
+          message: "Something went wrong!",
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -41,8 +51,20 @@ addFacebookFriendRequestRouter.post(
   body("id").isMongoId(),
   async (req, res) => {
     const { id } = req.body;
+    console.log("id to be deleted: ", id);
     try {
-      await FacebookFriend.deleteOne({ id });
+      const rejectRequest = await FacebookFriend.findOneAndDelete({ _id: id });
+      if (res) {
+        return res.status(STATUS_CODE.OK).send({
+          success: true,
+          message: "Friend Request has been removed!",
+        });
+      } else {
+        return res.status(STATUS_CODE.DuplicateOrBad).send({
+          success: false,
+          message: "Something went wrong!",
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -102,7 +124,7 @@ addFacebookFriendRequestRouter.post(
       } else {
         return res
           .status(STATUS_CODE.BadInput)
-          .json({ message: "you cannot add yourself " });
+          .json({ message: "You cannot add yourself :)" });
       }
     } catch (error) {
       console.log(error);
