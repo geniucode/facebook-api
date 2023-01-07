@@ -8,7 +8,7 @@ import controller from "../../controller/file.controller.js";
 import { UserProfile } from "../../model/userProfilePic/index.js";
 
 const changeProfilePicRouter = express.Router();
-changeProfilePicRouter.post(
+changeProfilePicRouter.put(
   "/change-profile-pic",
   withAuth,
   body("profilePic").isString(),
@@ -21,8 +21,8 @@ changeProfilePicRouter.post(
 
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
-        const userProfilePic = new UserProfile({
-          user,
+        const userProfilePic = new User({
+          ...userfound,
           profilePic,
         });
         await userProfilePic.save();
