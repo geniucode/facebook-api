@@ -9,7 +9,9 @@ getAllUserPostsRouter.get(
   async (req, res) => {
     try {
       const { id } = req.query;
-      const userPosts = await FacebookPost.find({ user: id }).lean();
+      const userPosts = await FacebookPost.find({ user: id })
+        .sort({ createdAt: -1 })
+        .lean();
       if (userPosts.length > 0) {
         return res.status(STATUS_CODE.OK).send({
           success: true,
