@@ -14,7 +14,10 @@ getFacebookPostRouter.get(
   async (req, res) => {
     try {
       const { _id } = req.query;
-      const postFound = await FacebookPost.findOne({ _id });
+      const postFound = await FacebookPost.findOne({ _id })
+        .populate("createdBy")
+        .populate("user")
+        .lean();
       if (postFound) {
         res.status(STATUS_CODE.OK).send({ success: true, post: postFound });
       } else {
@@ -37,7 +40,10 @@ getFacebookPostRouter.get(
   async (req, res) => {
     try {
       const { user } = req.query;
-      const userFound = await User.findOne({ _id: user });
+      const userFound = await User.findOne({ _id: user })
+        .populate("createdBy")
+        .populate("user")
+        .lean();
       if (userFound) {
         const postsFound = await FacebookPost.find({ user });
         if (postsFound) {

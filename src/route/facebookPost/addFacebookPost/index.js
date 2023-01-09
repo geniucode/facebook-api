@@ -11,20 +11,22 @@ const addFacebookPostRouter = express.Router();
 addFacebookPostRouter.post(
   "/facebook-post/add-post",
   withAuth,
+  // body("user").notEmpty(),
   body("postBody").isString(),
   body("postImg").isString(),
   validate,
   async (req, res) => {
     try {
       const member = req.user;
-      const user = member._id;
-      const { postBody, postImg } = req.body;
+      const createdBy = member._id;
+      const { user, postBody, postImg } = req.body;
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
         const newPost = new FacebookPost({
           user,
           postBody,
           postImg,
+          createdBy,
         });
         await newPost.save();
         res

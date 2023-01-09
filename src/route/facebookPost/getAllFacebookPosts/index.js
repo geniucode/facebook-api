@@ -14,7 +14,8 @@ getAllPostsRouter.get(
       const postsFound = await FacebookPost.find({})
         .sort({ createdAt: -1 })
         .limit(10)
-        .populate("user");
+        .populate("user")
+        .populate("createdBy");
 
       if (postsFound) {
         res.status(STATUS_CODE.OK).send({ success: true, posts: postsFound });
