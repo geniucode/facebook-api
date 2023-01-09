@@ -148,11 +148,17 @@ addFacebookFriendRequestRouter.get(
         requester,
         recipient,
       });
-      console.log(alreadySentRequest);
+
       if (alreadySentRequest != null) {
+        if (alreadySentRequest.status === "accepted") {
+          return res.status(STATUS_CODE.OK).send({
+            success: true,
+            message: "Friends",
+          });
+        }
         return res.status(STATUS_CODE.OK).send({
           success: true,
-          message: "Request Found",
+          message: alreadySentRequest.status,
         });
       } else {
         return res.status(STATUS_CODE.BadInput).send({
