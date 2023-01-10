@@ -19,13 +19,15 @@ addFacebookFriendRequestRouter.post(
       const resp = await FacebookFriend.findByIdAndUpdate(id, {
         status: statusConstants.accepted,
       });
+      console.log("response is: ", resp);
       const requester = await User.findOneAndUpdate(
-        { _id: res.requester },
+        { _id: resp.requester },
         { $push: { friends: user } }
       );
+      console.log("requester is: ", requester);
       const recipient = await User.findOneAndUpdate(
         { _id: user },
-        { $push: { friends: res.requester } }
+        { $push: { friends: resp.requester } }
       );
       if (resp) {
         return res.status(STATUS_CODE.OK).send({
@@ -50,7 +52,6 @@ addFacebookFriendRequestRouter.post(
   body("id").isMongoId(),
   async (req, res) => {
     const { id } = req.body;
-    console.log("id to be deleted: ", id);
     try {
       const rejectRequest = await FacebookFriend.findOneAndDelete({ _id: id });
       if (res) {
@@ -166,7 +167,7 @@ addFacebookFriendRequestRouter.get(
         });
       }
     } catch (error) {
-      console.log("the error is", error);
+      console.log(error);
       return res.status(STATUS_CODE.BadInput).send({
         success: false,
         message: "catch error",
