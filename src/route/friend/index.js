@@ -57,7 +57,7 @@ addFacebookFriendRequestRouter.post(
       if (res) {
         return res.status(STATUS_CODE.OK).send({
           success: true,
-          message: "Friend Request has been removed!",
+          message: "Friend Request has been declined!",
         });
       } else {
         return res.status(STATUS_CODE.DuplicateOrBad).send({
