@@ -1,7 +1,7 @@
 import express from "express";
 import { STATUS_CODE } from "#root/code-status.js";
-import { FacebookFriend, statusConstants } from "../../model/friend/index.js";
 import { withAuth } from "../../utils/withAuth.js";
+import { FacebookFriend, statusConstants } from "../../model/friend/index.js";
 
 const getFriendsNotificationsRouter = express.Router();
 

@@ -1,10 +1,9 @@
 import express from "express";
 import { query, body } from "express-validator";
 import { validate } from "#utils/validator.js";
-import { FacebookFriend } from "#model/friend/index.js";
 import { User } from "#model/user/index.js";
+import { FacebookFriend, statusConstants } from "#model/friend/index.js";
 import { withAuth } from "../../utils/withAuth.js";
-import { statusConstants } from "../../model/friend/index.js";
 import { STATUS_CODE } from "#root/code-status.js";
 
 const addFacebookFriendRequestRouter = express.Router();
