@@ -16,20 +16,18 @@ addFacebookFriendRequestRouter.post(
     const { id } = req.body;
     const user = req.user._id;
     try {
-      const resp = await FacebookFriend.findByIdAndUpdate(id, {
+      const res = await FacebookFriend.findByIdAndUpdate(id, {
         status: statusConstants.accepted,
       });
-      console.log("response is: ", resp);
       const requester = await User.findOneAndUpdate(
-        { _id: resp.requester },
+        { _id: res.requester },
         { $push: { friends: user } }
       );
-      console.log("requester is: ", requester);
       const recipient = await User.findOneAndUpdate(
         { _id: user },
-        { $push: { friends: resp.requester } }
+        { $push: { friends: res.requester } }
       );
-      if (resp) {
+      if (res) {
         return res.status(STATUS_CODE.OK).send({
           success: true,
           message: "Friend Request has been accepted!",
