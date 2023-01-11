@@ -18,13 +18,14 @@ addFacebookPostRouter.post(
     try {
       const member = req.user;
       const user = member._id;
-      const { postBody, postImg } = req.body;
+      const { postBody, postImg, feeling } = req.body;
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
         const newPost = new FacebookPost({
           user,
           postBody,
           postImg,
+          feeling,
         });
         await newPost.save();
         res
