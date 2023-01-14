@@ -19,13 +19,16 @@ changeProfilePicRouter.put(
       const user = member._id;
       const { profilePic } = req.body;
 
-      const userFound = await User.findOne({ _id: user });
+      const userFound = await User.findOne({ _id: user }).lean();
       if (userFound) {
-        const userProfilePic = new User({
-          ...userfound,
-          profilePic,
-        });
-        await userProfilePic.save();
+        const userProfilePic = await User.updateOne(
+          {
+            _id: userFound._id,
+          },
+          {
+            profilePic,
+          }
+        );
         res
           .status(STATUS_CODE.OK)
           .send({ success: true, message: "Profile has been changed" });
