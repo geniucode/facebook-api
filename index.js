@@ -10,6 +10,7 @@ import { postReactRouter } from "./src/route/facebookReackPost/index.js";
 import { googleCloudServiceRouter } from "./src/route/googleCloudService/index.js";
 import { addFacebookFriendRequestRouter } from "./src/route/friend/index.js";
 import { getFriendsNotificationsRouter } from "./src/route/getNotifications/index.js";
+import { changeProfilePicRouter } from "./src/route/facebookUserProfile/index.js";
 
 const app = express();
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(postReactRouter);
 app.use(googleCloudServiceRouter);
 app.use(addFacebookFriendRequestRouter);
 app.use(getFriendsNotificationsRouter);
+app.use(changeProfilePicRouter);
 
 connectToDB()
   .then(() => {
