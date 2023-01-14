@@ -27,6 +27,7 @@ userLoginRouter.post(
             birthDay: userFound.birthDay,
             country: userFound.country,
             friends: userFound.friends,
+            profilePic: userFound.profilePic,
           },
           "SecretKey",
           { expiresIn: 86400 }
