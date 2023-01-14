@@ -63,6 +63,7 @@ userSignupRouter.post(
           birthDay,
           country,
           forgetPasswordToken: "",
+          coverPhoto: "",
         });
 
         await newUser.save();

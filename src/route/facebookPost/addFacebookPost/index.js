@@ -1,7 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 import { validate } from "#utils/validator.js";
-import { FacebookPost } from "#model/facebookPost/index.js";
+import { FacebookFriend } from "../../../model/friend/index.js";
 import { User } from "#model/user/index.js";
 import { withAuth } from "../../../utils/withAuth.js";
 import { STATUS_CODE } from "#root/code-status.js";
@@ -19,7 +19,8 @@ addFacebookPostRouter.post(
     try {
       const member = req.user;
       const createdBy = member._id;
-      const { user, postBody, postImg } = req.body;
+      const user = member._id;
+      const { postBody, postImg, feeling } = req.body;
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
         const newPost = new FacebookPost({
@@ -27,6 +28,7 @@ addFacebookPostRouter.post(
           postBody,
           postImg,
           createdBy,
+          feeling,
         });
         await newPost.save();
         res
