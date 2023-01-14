@@ -11,11 +11,14 @@ getAllPostsRouter.get(
   withAuth,
   async (req, res) => {
     try {
-      const postsFound = await FacebookPost.find({}).sort({updatedAt:-1}).limit(10).populate("user");
+      const postsFound = await FacebookPost.find({})
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .populate("user")
+        .populate("createdBy");
 
       if (postsFound) {
         res.status(STATUS_CODE.OK).send({ success: true, posts: postsFound });
-        // console.log(postsFound)
       } else {
         res
           .status(STATUS_CODE.NotFound)
@@ -28,7 +31,5 @@ getAllPostsRouter.get(
     }
   }
 );
-
-
 
 export { getAllPostsRouter };
