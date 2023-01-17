@@ -7,7 +7,6 @@ import { withAuth } from "../../utils/withAuth.js";
 import { STATUS_CODE } from "#root/code-status.js";
 
 const addFacebookFriendRequestRouter = express.Router();
-console.log("test");
 addFacebookFriendRequestRouter.post(
   "/accept-friend-request",
   withAuth,
