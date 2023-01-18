@@ -154,10 +154,10 @@ addFacebookFriendRequestRouter.get(
         }
         return res.status(STATUS_CODE.OK).send({
           success: true,
-          message: alreadySentRequest.status,
+          message: [alreadySentRequest.status, alreadySentRequest._id],
         });
-      } 
-       alreadySentRequest = await FacebookFriend.findOne({
+      }
+      alreadySentRequest = await FacebookFriend.findOne({
         requester: recipient,
         recipient: requester,
       });
@@ -171,10 +171,9 @@ addFacebookFriendRequestRouter.get(
         }
         return res.status(STATUS_CODE.OK).send({
           success: true,
-          message: "He sent you a friend request",
+          message: ["Received request", alreadySentRequest._id],
         });
-        }
-      else {
+      } else {
         return res.status(STATUS_CODE.BadInput).send({
           success: false,
           message: "Request not Found",
