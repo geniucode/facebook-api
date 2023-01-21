@@ -26,16 +26,18 @@ userSignupRouter.post(
     ),
   body("birthDay")
     .isString()
-    .notEmpty()
     .custom((value) => {
       const date = new Date(value);
       const timestamp = date.getTime();
       if (typeof timestamp !== "number" || Number.isNaN(timestamp)) {
         return false;
       }
-      return date.toISOString().substring(0, 10) === value;
+      return (
+        date.toISOString().substring(0, 10) === value &&
+        ageFunction(value) >= process.env.minage
+      );
     })
-    .withMessage("please enter a valid date value"),
+    .withMessage("age is less than approved or invalid date value"),
   body("country")
     .isString()
     .notEmpty()
@@ -44,49 +46,41 @@ userSignupRouter.post(
   async (req, res) => {
     try {
       const { name, email, gender, password, birthDay, country } = req.body;
-      const ageFinder = ageFunction(birthDay); //age Finder
       const userFound = await User.findOne({ email });
       if (userFound) {
-        res
-          .status(STATUS_CODE.BadInput)
-          .send({ success: false, message: "Email is already in use" });
+        res.status(STATUS_CODE.BadInput).send({
+          success: false,
+          errors: [
+            { value: email, param: "email", msg: "Email is already in use" },
+          ],
+        });
         return;
       }
-      if (ageFinder >= process.env.minage) {
-        const salt = await bcrypt.genSaltSync(saltRounds);
-        const hash = await bcrypt.hashSync(password, salt);
-        const newUser = new User({
-          name,
-          email,
-          gender,
-          password: hash,
-          birthDay,
-          country,
-          forgetPasswordToken: "",
-          coverPhoto: "",
-        });
 
-        await newUser.save();
-        res.send({
-          success: true,
-          message: "user is added sucessfully",
-        });
-      } else {
-        res
-          .status(STATUS_CODE.BadInputs)
-          .send({
-            success: false,
-            message: "Age of user is less than approved",
-          });
-      }
+      const salt = await bcrypt.genSaltSync(saltRounds);
+      const hash = await bcrypt.hashSync(password, salt);
+      const newUser = new User({
+        name,
+        email,
+        gender,
+        password: hash,
+        birthDay,
+        country,
+        forgetPasswordToken: "",
+        coverPhoto: "",
+      });
+
+      await newUser.save();
+      res.send({
+        success: true,
+        message: "user is added sucessfully",
+      });
     } catch (error) {
-      res
-        .status(STATUS_CODE.DuplicateOrBad)
-        .send({
-          success: false,
-          error,
-          message: "wrong input,catch error return ",
-        });
+      res.status(STATUS_CODE.DuplicateOrBad).send({
+        success: false,
+        error,
+        message: "wrong input,catch error return ",
+      });
     }
   }
 );
