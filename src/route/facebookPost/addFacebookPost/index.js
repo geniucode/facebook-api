@@ -18,8 +18,16 @@ addFacebookPostRouter.post(
   async (req, res) => {
     try {
       const member = req.user;
-      const createdBy = member._id;
-      const { user, postBody, postImg } = req.body;
+      // const createdBy = member._id;
+      const {
+        user,
+        postBody,
+        postImg,
+        sharedBy,
+        createdBy = member._id,
+        shareNumber = 0,
+        isCopy = false,
+      } = req.body;
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
         const newPost = new FacebookPost({
@@ -27,6 +35,9 @@ addFacebookPostRouter.post(
           postBody,
           postImg,
           createdBy,
+          sharedBy,
+          shareNumber,
+          isCopy,
         });
         await newPost.save();
         res
