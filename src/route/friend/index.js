@@ -69,6 +69,41 @@ addFacebookFriendRequestRouter.post(
 );
 
 addFacebookFriendRequestRouter.post(
+  "/remove-friend-request",
+  withAuth,
+  body("id").isMongoId(),
+  async (req, res) => {
+    const { id } = req.body;
+    const user = req.user._id;
+    try {
+      const removeFriend = await FacebookFriend.findOneAndDelete({
+        requester: id,
+        recipient: user,
+      });
+      if (removeFriend) {
+        return res.status(STATUS_CODE.OK).send({
+          success: true,
+          message: "Friend has been removed!",
+        });
+      } else {
+        const removeFriend = await FacebookFriend.findOneAndDelete({
+          recipient: id,
+          requester: user,
+        });
+        if (res) {
+          return res.status(STATUS_CODE.OK).send({
+            success: true,
+            message: "Friend has been removed!",
+          });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+addFacebookFriendRequestRouter.post(
   "/update-notification",
   withAuth,
   body("id").isMongoId(),
