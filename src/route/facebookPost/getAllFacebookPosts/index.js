@@ -20,7 +20,6 @@ getAllPostsRouter.get(
 
       if (postsFound) {
         res.status(STATUS_CODE.OK).send({ success: true, posts: postsFound });
-        console.log(postsFound);
       } else {
         res
           .status(STATUS_CODE.NotFound)

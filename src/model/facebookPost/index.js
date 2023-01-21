@@ -9,6 +9,7 @@ const facebookPostSchema = new Schema(
     sharedBy: { type: Schema.Types.ObjectId, ref: "User" },
     shareNumber: { type: Number },
     isCopy: { type: Boolean },
+    feeling: { type: String, required: false, default: "" },
   },
   { timestamps: true }
 );
