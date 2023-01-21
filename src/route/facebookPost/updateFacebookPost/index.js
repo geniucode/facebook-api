@@ -6,16 +6,16 @@ import { STATUS_CODE } from "#root/code-status.js";
 
 const updateFacebookPostRouter = express.Router();
 
-updateFacebookPostRouter.put(
+updateFacebookPostRouter.post(
   "/facebook-post/update-post-by-id",
   body("_id").notEmpty().withMessage("Post ID is required to update"),
   validate,
   async (req, res) => {
     try {
-      const { _id, postBody, postImg } = req.body;
+      const { _id, postBody, postImg, shareNumber } = req.body;
       const post = await FacebookPost.findByIdAndUpdate(
         { _id },
-        { postBody, postImg }
+        { postBody, postImg, shareNumber }
       );
       if (post) {
         res

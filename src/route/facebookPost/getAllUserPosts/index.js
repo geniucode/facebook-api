@@ -11,7 +11,9 @@ getAllUserPostsRouter.get(
       const { id } = req.query;
       const userPosts = await FacebookPost.find({ user: id })
         .sort({ createdAt: -1 })
+        .populate("user")
         .populate("createdBy")
+        .populate("sharedBy")
         .lean();
       if (userPosts.length > 0) {
         return res.status(STATUS_CODE.OK).send({
