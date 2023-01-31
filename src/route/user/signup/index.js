@@ -2,7 +2,7 @@ import express from "express";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import ageFunction from "../../../utils/ageFunction.js";
+import ageFunction from "#utils/ageFunction.js";
 import { validate } from "#utils/validator.js";
 import { mailVarification } from "#utils/mailer.js";
 import { User } from "#model/user/index.js";
