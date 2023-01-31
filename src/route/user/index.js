@@ -7,6 +7,7 @@ import { userSearchRouter } from "./search/index.js";
 import { validateTokenRouter } from "./validateToken/index.js";
 import { getUserByIdRouter } from "./getUserById/index.js";
 import { userUpdateCoverPhotoRouter } from "./updateCoverPhoto/index.js";
+import { activateAccountRouter } from "./activateAccount/index.js";
 
 const userRouter = express.Router();
 userRouter.use(userLoginRouter);
@@ -17,5 +18,6 @@ userRouter.use(userSearchRouter);
 userRouter.use(validateTokenRouter);
 userRouter.use(getUserByIdRouter);
 userRouter.use(userUpdateCoverPhotoRouter);
+userRouter.use(activateAccountRouter);
 
 export { userRouter };
