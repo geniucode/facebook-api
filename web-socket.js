@@ -6,7 +6,6 @@ export const createWebSocket = async () => {
     },
     () => {
       const users = new Set();
-
       const sendMessage = (message) => {
         users.forEach((user) => {
           user.ws.send(JSON.stringify(message));
@@ -23,18 +22,16 @@ export const createWebSocket = async () => {
           try {
             // Parsing the message
             const data = JSON.parse(message);
-
+            console.log(data);
             // Checking if the message is a valid one
 
             if (typeof data.body !== "string") {
               console.error("Invalid message");
               return;
             }
-
             // Sending the message
-
             const messageToSend = {
-              sender: "Ali",
+              sender: data.sender,
               body: data.body,
               sentAt: Date.now(),
             };
