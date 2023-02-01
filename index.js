@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectToDB } from "#root/db-connection.js";
+import { createWebSocket } from "#root/web-socket.js";
 import { userRouter } from "#route/user/index.js";
 import { facebookPostRouter } from "#route/facebookPost/index.js";
 import { facebookCommentRouter } from "./src/route/facebookComment/index.js";
@@ -31,6 +32,7 @@ connectToDB()
   .then(() => {
     console.log("Connected to Mongoose");
     const port = process.env.port;
+    createWebSocket();
     app.listen(port, () => {
       console.log(`listening on ${port}' ...`);
     });
