@@ -6,7 +6,6 @@ import ageFunction from "#utils/ageFunction.js";
 import { validate } from "#utils/validator.js";
 import { mailVarification } from "#utils/mailer.js";
 import { User } from "#model/user/index.js";
-import { PendingUser } from "#model/pendingUser/index.js";
 import { STATUS_CODE } from "#root/code-status.js";
 
 const saltRounds = process.env.saltRounds;
@@ -48,9 +47,7 @@ userSignupRouter.post(
   async (req, res) => {
     try {
       const { name, email, gender, password, birthDay, country } = req.body;
-      const userFound =
-        (await User.findOne({ email })) ||
-        (await PendingUser.findOne({ email }));
+      const userFound = await User.findOne({ email });
       if (userFound) {
         res.status(STATUS_CODE.BadInput).send({
           success: false,
@@ -64,7 +61,7 @@ userSignupRouter.post(
       const salt = await bcrypt.genSaltSync(saltRounds);
       const pw = await bcrypt.hashSync(password, salt);
 
-      const newUser = new PendingUser({
+      const newUser = new User({
         name,
         email,
         gender,
@@ -72,11 +69,10 @@ userSignupRouter.post(
         birthDay,
         country,
       });
-
       const pendingUser = await newUser.save();
 
       mailVarification({
-        from: '"Facebook Inc" forgotpassword@facebook.inc', // sender address
+        from: '"Facebook Inc" activate@facebook.inc', // sender address
         to: email, // list of receivers
         subject: "Activate your account", // Subject line
         text: ``,

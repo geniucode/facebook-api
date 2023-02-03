@@ -7,6 +7,7 @@ const usersSchema = new Schema({
   password: String,
   birthDay: Date,
   country: String,
+  pending: { type: Boolean , default: true },
   forgetPasswordToken: { type: String , default: "" },
   coverPhoto: { type: String , default: "" },
   profilePic: { type: String , default: "" },

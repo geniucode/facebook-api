@@ -1,10 +1,10 @@
 import express from "express";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { validate } from "#utils/validator.js";
 import { User } from "#model/user/index.js";
-import { PendingUser } from "#model/pendingUser/index.js";
 
 const userLoginRouter = express.Router();
 
@@ -16,7 +16,6 @@ userLoginRouter.post(
   async (req, res) => {
     const { email, password } = req.body;
     const userFound = await User.findOne({ email: email });
-    const userPending = await PendingUser.findOne({ email: email });
     if (userFound) {
       const isEqualWith = await bcrypt.compare(password, userFound.password);
       if (isEqualWith) {
@@ -28,10 +27,11 @@ userLoginRouter.post(
             gender: userFound.gender,
             birthDay: userFound.birthDay,
             country: userFound.country,
-            friends: userFound.friends,
+            pending: userFound.pending,
             profilePic: userFound.profilePic,
+            coverPhoto: userFound.coverPhoto,
           },
-          "SecretKey",
+          process.env.jwtSecret,
           { expiresIn: 86400 }
         );
         res.send({
@@ -45,10 +45,8 @@ userLoginRouter.post(
           message: "correct username but wrong password",
         });
       }
-    } else if (userPending) {
-      res.send({ success: false, message: "account is not activated yet" });
     } else {
-      res.send({ success: false, message: " username/email not found " });
+      res.send({ success: false, message: "User not found " });
     }
   }
 );
