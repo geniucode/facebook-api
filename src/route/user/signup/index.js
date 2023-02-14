@@ -2,8 +2,9 @@ import express from "express";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import ageFunction from "../../../utils/ageFunction.js";
+import ageFunction from "#utils/ageFunction.js";
 import { validate } from "#utils/validator.js";
+import { mailVarification } from "#utils/mailer.js";
 import { User } from "#model/user/index.js";
 import { STATUS_CODE } from "#root/code-status.js";
 
@@ -58,22 +59,32 @@ userSignupRouter.post(
       }
 
       const salt = await bcrypt.genSaltSync(saltRounds);
-      const hash = await bcrypt.hashSync(password, salt);
+      const pw = await bcrypt.hashSync(password, salt);
+
       const newUser = new User({
         name,
         email,
         gender,
-        password: hash,
+        password: pw,
         birthDay,
         country,
-        forgetPasswordToken: "",
-        coverPhoto: "",
+      });
+      const pendingUser = await newUser.save();
+
+      mailVarification({
+        from: '"Facebook Inc" activate@facebook.inc', // sender address
+        to: email, // list of receivers
+        subject: "Activate your account", // Subject line
+        text: ``,
+        html: `<h3>Dear ${name},</h3></br>
+               <p>Thank for registering into our website ...</p>
+               <p>To activate your account, please follow this link:</p>
+               <a target="_" href="http://localhost:3000/activate/${pendingUser._id}">Activate Link</a></br>`,
       });
 
-      await newUser.save();
       res.send({
         success: true,
-        message: "user is added sucessfully",
+        message: "user is added, check your email to activate your account",
       });
     } catch (error) {
       res.status(STATUS_CODE.DuplicateOrBad).send({

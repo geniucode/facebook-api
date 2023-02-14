@@ -7,9 +7,10 @@ const usersSchema = new Schema({
   password: String,
   birthDay: Date,
   country: String,
-  forgetPasswordToken: String,
-  coverPhoto: String,
-  profilePic: String,
+  pending: { type: Boolean , default: true },
+  forgetPasswordToken: { type: String , default: "" },
+  coverPhoto: { type: String , default: "" },
+  profilePic: { type: String , default: "" },
 });
 usersSchema.index({ email: 1 });
 export const User = mongoose.model("User", usersSchema);

@@ -1,11 +1,13 @@
 import jwt from "jsonwebtoken";
 import express from "express";
+import dotenv from "dotenv";
 import { STATUS_CODE } from "#root/code-status.js";
-const accessTokenSecret = "SecretKey"; //i need to know it
+
 const validateTokenRouter = express.Router();
+
 validateTokenRouter.post("/validate-token", (req, res) => {
   const token = req.body.jwtToken;
-  jwt.verify(token, accessTokenSecret, (err, user) => {
+  jwt.verify(token, process.env.jwtSecret, (err, user) => {
     if (err) {
       return res.status(STATUS_CODE.Forbidden).send({ success: false });
       // The HTTP 403 Forbidden response status code indicates that the

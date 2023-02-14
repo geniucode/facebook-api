@@ -30,19 +30,25 @@ addFacebookPostRouter.post(
 
       const userFound = await User.findOne({ _id: user });
       if (userFound) {
-        const newPost = new FacebookPost({
-          user,
-          postBody,
-          postImg,
-          createdBy,
-          sharedBy,
-          shareNumber,
-          isCopy,
-        });
-        await newPost.save();
-        res
-          .status(STATUS_CODE.OK)
-          .send({ success: true, message: "Post added successfully" });
+        if (!userFound.pending) {
+          const newPost = new FacebookPost({
+            user,
+            postBody,
+            postImg,
+            createdBy,
+            sharedBy,
+            shareNumber,
+            isCopy,
+          });
+          await newPost.save();
+          res
+            .status(STATUS_CODE.OK)
+            .send({ success: true, message: "Post added successfully" });
+        } else{
+          res
+            .status(STATUS_CODE.UnAuthorized)
+            .send({ success: false, message: "Activate your account first" });
+        }
       } else {
         res
           .status(STATUS_CODE.UnAuthorized)

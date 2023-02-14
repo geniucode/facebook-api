@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 const accessTokenSecret = "SecretKey"; //i need to know it
 export const withAuth = async (req, res, next) => {
@@ -7,7 +8,7 @@ export const withAuth = async (req, res, next) => {
   if (token) {
     token = token.split(" ")[1];
     try {
-      const user = await jwt.verify(token, accessTokenSecret);
+      const user = await jwt.verify(token, process.env.jwtSecret);
       req.user = user;
       next();
     } catch (e) {
