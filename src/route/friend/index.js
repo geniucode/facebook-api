@@ -7,7 +7,6 @@ import { withAuth } from "../../utils/withAuth.js";
 import { STATUS_CODE } from "#root/code-status.js";
 
 const addFacebookFriendRequestRouter = express.Router();
-
 addFacebookFriendRequestRouter.post(
   "/accept-friend-request",
   withAuth,
@@ -19,14 +18,14 @@ addFacebookFriendRequestRouter.post(
       const resp = await FacebookFriend.findByIdAndUpdate(id, {
         status: statusConstants.accepted,
       });
-      const requester = await User.findOneAndUpdate(
-        { _id: resp.requester },
-        { $push: { friends: user } }
-      );
-      const recipient = await User.findOneAndUpdate(
-        { _id: user },
-        { $push: { friends: resp.requester } }
-      );
+      // const requester = await User.findOneAndUpdate(
+      //   { _id: resp.requester },
+      //   { $push: { friends: user } }
+      // );
+      // const recipient = await User.findOneAndUpdate(
+      //   { _id: user },
+      //   { $push: { friends: resp.requester } }
+      // );
       if (resp) {
         return res.status(STATUS_CODE.OK).send({
           success: true,
@@ -62,6 +61,41 @@ addFacebookFriendRequestRouter.post(
           success: false,
           message: "Something went wrong!",
         });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+addFacebookFriendRequestRouter.post(
+  "/remove-friend-request",
+  withAuth,
+  body("id").isMongoId(),
+  async (req, res) => {
+    const { id } = req.body;
+    const user = req.user._id;
+    try {
+      const removeFriend = await FacebookFriend.findOneAndDelete({
+        requester: id,
+        recipient: user,
+      });
+      if (removeFriend) {
+        return res.status(STATUS_CODE.OK).send({
+          success: true,
+          message: "Friend has been removed!",
+        });
+      } else {
+        const removeFriend = await FacebookFriend.findOneAndDelete({
+          recipient: id,
+          requester: user,
+        });
+        if (res) {
+          return res.status(STATUS_CODE.OK).send({
+            success: true,
+            message: "Friend has been removed!",
+          });
+        }
       }
     } catch (err) {
       console.log(err);
@@ -141,7 +175,7 @@ addFacebookFriendRequestRouter.get(
     try {
       const { recipient } = req.query;
       const requester = req.user._id;
-      const alreadySentRequest = await FacebookFriend.findOne({
+      let alreadySentRequest = await FacebookFriend.findOne({
         requester,
         recipient,
       });
@@ -155,7 +189,24 @@ addFacebookFriendRequestRouter.get(
         }
         return res.status(STATUS_CODE.OK).send({
           success: true,
-          message: alreadySentRequest.status,
+          message: [alreadySentRequest.status, alreadySentRequest._id],
+        });
+      }
+      alreadySentRequest = await FacebookFriend.findOne({
+        requester: recipient,
+        recipient: requester,
+      });
+
+      if (alreadySentRequest != null) {
+        if (alreadySentRequest.status === "accepted") {
+          return res.status(STATUS_CODE.OK).send({
+            success: true,
+            message: "Friends",
+          });
+        }
+        return res.status(STATUS_CODE.OK).send({
+          success: true,
+          message: ["Received request", alreadySentRequest._id],
         });
       } else {
         return res.status(STATUS_CODE.BadInput).send({
